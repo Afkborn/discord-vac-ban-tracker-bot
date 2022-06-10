@@ -45,3 +45,42 @@
 2022-06-11 02:26:01,577:DEBUG:discord.client: Dispatching event socket_raw_receive
 2022-06-11 02:26:01,577:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
 2022-06-11 02:26:01,577:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:26:17,872:DEBUG:discord.gateway: Received WSMessage(type=<WSMsgType.CLOSE: 8>, data=4003, extra='Not authenticated.')
+2022-06-11 02:26:17,873:INFO:discord.gateway: Websocket closed with 4003, attempting a reconnect.
+2022-06-11 02:26:17,873:INFO:discord.client: Got a request to RESUME the websocket.
+2022-06-11 02:26:17,873:DEBUG:discord.client: Dispatching event disconnect
+2022-06-11 02:26:17,961:DEBUG:discord.http: GET https://discord.com/api/v7/gateway with None has returned 200
+2022-06-11 02:26:17,962:DEBUG:discord.http: GET https://discord.com/api/v7/gateway has received {'url': 'wss://gateway.discord.gg'}
+2022-06-11 02:26:18,256:DEBUG:discord.gateway: Created websocket connected to wss://gateway.discord.gg?encoding=json&v=6&compress=zlib-stream
+2022-06-11 02:26:18,258:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:26:18,258:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 10, 'd': {'heartbeat_interval': 41250, '_trace': ['["gateway-prd-main-lgs9",{"micros":0.0}]']}}
+2022-06-11 02:26:18,258:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:26:18,258:DEBUG:discord.client: Dispatching event socket_raw_send
+2022-06-11 02:26:18,260:DEBUG:discord.client: Dispatching event socket_raw_send
+2022-06-11 02:26:18,260:INFO:discord.gateway: Shard ID None has sent the RESUME payload.
+2022-06-11 02:26:18,408:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:26:18,408:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2022-06-11 02:26:18,408:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:26:18,411:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:26:18,411:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 9, 'd': False}
+2022-06-11 02:26:18,411:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:26:18,412:INFO:discord.gateway: Shard ID None session has been invalidated.
+2022-06-11 02:26:18,564:INFO:discord.client: Got a request to IDENTIFY the websocket.
+2022-06-11 02:26:18,565:DEBUG:discord.client: Dispatching event disconnect
+2022-06-11 02:26:18,592:DEBUG:discord.http: GET https://discord.com/api/v7/gateway with None has returned 200
+2022-06-11 02:26:18,592:DEBUG:discord.http: GET https://discord.com/api/v7/gateway has received {'url': 'wss://gateway.discord.gg'}
+2022-06-11 02:26:18,826:DEBUG:discord.gateway: Created websocket connected to wss://gateway.discord.gg?encoding=json&v=6&compress=zlib-stream
+2022-06-11 02:26:18,827:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:26:18,827:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 10, 'd': {'heartbeat_interval': 41250, '_trace': ['["gateway-prd-main-nhnf",{"micros":0.0}]']}}
+2022-06-11 02:26:18,827:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:26:18,827:DEBUG:discord.client: Dispatching event socket_raw_send
+2022-06-11 02:26:23,825:DEBUG:discord.client: Dispatching event socket_raw_send
+2022-06-11 02:26:23,825:INFO:discord.gateway: Shard ID None has sent the IDENTIFY payload.
+2022-06-11 02:26:23,826:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:26:23,826:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2022-06-11 02:26:23,826:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:26:23,993:DEBUG:discord.gateway: Received WSMessage(type=<WSMsgType.CLOSE: 8>, data=4004, extra='Authentication failed.')
+2022-06-11 02:26:23,994:INFO:discord.gateway: Websocket closed with 4004, cannot reconnect.
+2022-06-11 02:26:23,994:DEBUG:discord.client: Dispatching event disconnect
+2022-06-11 02:26:23,995:INFO:discord.client: Cleaning up tasks.
+2022-06-11 02:26:23,995:INFO:discord.client: Closing the event loop.

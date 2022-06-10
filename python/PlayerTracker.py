@@ -3,7 +3,7 @@ from xmlrpc.client import Boolean
 from matplotlib.style import use
 from steamwebapi.api import ISteamUser, IPlayerService, ISteamUserStats
 
-from python.GlobalVariables import CSGO_APP_ID, STEAM_API_KEY
+from python.globalVariables import CSGO_APP_ID, STEAM_API_KEY
 
 #Model
 from .Model.PlayerBan import PlayerBan

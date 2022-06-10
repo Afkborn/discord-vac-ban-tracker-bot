@@ -1,7 +1,7 @@
 from time import mktime, time
 from discord.ext import commands
 from discord import Embed, Color, Game
-from python.GlobalVariables import *
+from python.globalVariables import *
 from python.VacLogging import *
 from python.Database import Database
 from python.PlayerTracker import PlayerTracker
