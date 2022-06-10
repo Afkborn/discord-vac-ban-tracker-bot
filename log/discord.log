@@ -30,3 +30,18 @@
 2022-06-11 02:23:58,138:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': 'MESSAGE_CREATE', 's': 3, 'op': 0, 'd': {'type': 0, 'tts': False, 'timestamp': '2022-06-10T23:23:58.054000+00:00', 'referenced_message': None, 'pinned': False, 'nonce': '984961150074486784', 'mentions': [], 'mention_roles': [], 'mention_everyone': False, 'member': {'roles': ['881238467340820481'], 'mute': False, 'joined_at': '2020-10-26T14:59:42.532000+00:00', 'hoisted_role': None, 'flags': 0, 'deaf': False}, 'id': '984961150842183680', 'flags': 0, 'embeds': [], 'edited_timestamp': None, 'content': 'asda', 'components': [], 'channel_id': '984546097240346667', 'author': {'username': 'Bilgehan', 'public_flags': 0, 'id': '238939744766001152', 'discriminator': '6931', 'avatar_decoration': None, 'avatar': '97304044d15ec76694c2254f30504e7c'}, 'attachments': [], 'guild_id': '153124473757761536'}}
 2022-06-11 02:23:58,138:DEBUG:discord.client: Dispatching event socket_response
 2022-06-11 02:23:58,139:DEBUG:discord.client: Dispatching event message
+2022-06-11 02:23:59,925:DEBUG:discord.client: Dispatching event ready
+2022-06-11 02:23:59,928:DEBUG:discord.gateway: Sending "{"op":3,"d":{"game":{"type":0,"name":"","timestamps":{}},"afk":false,"since":0.0,"status":"online"}}" to change status
+2022-06-11 02:23:59,929:DEBUG:discord.client: Dispatching event socket_raw_send
+2022-06-11 02:24:38,913:DEBUG:discord.gateway: Keeping shard ID None websocket alive with sequence 3.
+2022-06-11 02:24:39,065:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:24:39,065:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2022-06-11 02:24:39,065:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:25:20,173:DEBUG:discord.gateway: Keeping shard ID None websocket alive with sequence 3.
+2022-06-11 02:25:20,323:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:25:20,323:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2022-06-11 02:25:20,323:DEBUG:discord.client: Dispatching event socket_response
+2022-06-11 02:26:01,428:DEBUG:discord.gateway: Keeping shard ID None websocket alive with sequence 3.
+2022-06-11 02:26:01,577:DEBUG:discord.client: Dispatching event socket_raw_receive
+2022-06-11 02:26:01,577:DEBUG:discord.gateway: For Shard ID None: WebSocket Event: {'t': None, 's': None, 'op': 11, 'd': None}
+2022-06-11 02:26:01,577:DEBUG:discord.client: Dispatching event socket_response
