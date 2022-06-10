@@ -3,7 +3,7 @@ import sqlite3 as sql
 #Model
 from .Model.PlayerBan import PlayerBan
 from .Model.Player import Player
-
+from .Model.DiscordUser import DiscordUser
 
 CREATETABLE_PLAYER = """CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +35,15 @@ CREATETABLE_PLAYERBAN = """CREATE TABLE IF NOT EXISTS playerbans (
     economyban TEXT,
     createdtime REAL
     );"""
-    
+
+CREATETABLE_DISCORDUSER = """CREATE TABLE IF NOT EXISTS discordusers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    discordID INTEGER,
+    name TEXT,
+    avatar_url TEXT,
+    joined_at REAL,
+    created_at REAL
+    );"""
 
 class Database():
     dbName = "database.db"
@@ -55,6 +63,7 @@ class Database():
         
         self.im.execute(CREATETABLE_PLAYER)
         self.im.execute(CREATETABLE_PLAYERBAN)
+        self.im.execute(CREATETABLE_DISCORDUSER)
         self.db.commit()
         
         self.db.close()
@@ -129,3 +138,33 @@ class Database():
         id, steamid, communitybanned, VACbanned, numberofVACBans, daysSinceLastBan, numberofGameBans, economyban, createdtime = result
         myPlayerBan = PlayerBan(id,steamid,communitybanned,VACbanned,numberofVACBans,daysSinceLastBan,numberofGameBans,economyban,createdtime)
         return myPlayerBan
+
+    def addDiscordUser(self, discordUser:DiscordUser) :
+        if (self.getDiscordUserWithDiscordID(discordUser.getDiscordID()) != None):    
+            return False
+        
+        self.openDB()
+        
+        KEY = f"discordID,name,avatar_url,joined_at,created_at"
+        VALUES = f"""
+        '{discordUser.getDiscordID()}',
+        '{discordUser.getName()}',
+        '{discordUser.getAvatarURL()}',
+        '{discordUser.getJoinedAt()}',
+        '{discordUser.getCreatedAt()}'
+        """
+        
+        self.im.execute(f"INSERT INTO discordusers ({KEY}) VALUES ({VALUES})")
+        self.db.commit()
+        self.db.close()
+        
+    def getDiscordUserWithDiscordID(self, discordID:int):
+        self.openDB()
+        self.im.execute(f"SELECT * FROM discordusers WHERE discordID='{discordID}'")
+        result = self.im.fetchone()
+        self.db.close()
+        if result == None:
+            return None
+        id, discordID, name, avatar_url, joined_at, created_at = result
+        myDiscordUser = DiscordUser(id, discordID, name, avatar_url, joined_at, created_at)
+        return myDiscordUser

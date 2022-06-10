@@ -3,7 +3,7 @@ from xmlrpc.client import Boolean
 from matplotlib.style import use
 from steamwebapi.api import ISteamUser, IPlayerService, ISteamUserStats
 
-from python.keys import CSGO_APP_ID, STEAM_API_KEY
+from python.GlobalVariables import CSGO_APP_ID, STEAM_API_KEY
 
 #Model
 from .Model.PlayerBan import PlayerBan
@@ -19,13 +19,17 @@ class PlayerTracker:
         self.steamuserinfo = ISteamUser(steam_api_key=STEAM_API_KEY)
         
     def checkSteamID(self,steamid:str) -> Boolean:
-
         if ("https" in steamid):
-            steamid = steamid.split("/")[-2]
+            if (steamid[-1] == "/"):
+                steamid = steamid.split("/")[-2]
+            else:
+                print(steamid)
+                steamid = steamid.split("/")[-1]
             if (steamid.isdigit()):
                 return True
             return False
-
+                
+        print(steamid)
         if steamid.isdigit():
             return True
         
