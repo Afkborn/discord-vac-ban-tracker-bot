@@ -55,6 +55,18 @@ class PlayerTracker:
             playerinfo = playerinfo[0]
             steamID = playerinfo['steamid']
             communityvisibilitystate = playerinfo['communityvisibilitystate']
+            if communityvisibilitystate == 2 or communityvisibilitystate == 1:
+                print("PRIVATE")
+                timecreated = 0
+                primaryclanid = 0
+                personastateflags = 0
+            elif communityvisibilitystate == 3:
+                timecreated = playerinfo['timecreated']
+                primaryclanid = playerinfo['primaryclanid']
+                personastateflags = playerinfo['personastateflags']
+                #private profile
+                
+            
             profilestate = playerinfo['profilestate']
             personaname = playerinfo['personaname']
             if 'commentpermission' in playerinfo:
@@ -68,9 +80,7 @@ class PlayerTracker:
             avatarfull = playerinfo['avatarfull']
             avatarhash = playerinfo['avatarhash']
             personastate = playerinfo['personastate']
-            primaryclanid = playerinfo['primaryclanid']
-            timecreated = playerinfo['timecreated']
-            personastateflags = playerinfo['personastateflags']
+            
             myPlayer = Player(steamID=steamID,communityVisibilityState=communityvisibilitystate,profileState=profilestate,personaName=personaname,commentpermission=commentpermission,profileURL=profileurl,avatar=avatar,avatarMedium=avatarmedium,avatarFull=avatarfull,avatarHash=avatarhash,personaState=personastate,primaryClanID=primaryclanid,timeCreated=timecreated,personaStateFlags=personastateflags,createdTime=time())
             return myPlayer
         else:
@@ -127,7 +137,7 @@ class PlayerTracker:
             return None
         steamid = self.clearSteamID(steamid)
         try:
-            response = requests.get(f"https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={CSGO_APP_ID}&key={STEAM_API_KEY}&steamid={steamid}")
+            response = requests.get(f"https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v2/?appid={CSGO_APP_ID}&key={STEAM_API_KEY}&steamid={steamid}")
             return response.json()['playerstats']['stats'][2]['value']
         except:
             print("Error: SteamID is not valid")
