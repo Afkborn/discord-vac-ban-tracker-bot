@@ -1,17 +1,29 @@
 
+# 'steamid': '76561199089429877',
+# 'communityvisibilitystate': 3,
+# 'profilestate': 1,
+# 'personaname': 'Bepantol',
+# 'profileurl': 'https://steamcommunity.com/profiles/76561199089429877/',
+# 'avatar': 'https://avatars.akamai.steamstatic.com/9221e2ff17cff04f8f87794fe16a0fae199df68d.jpg',
+# 'avatarmedium': 'https://avatars.akamai.steamstatic.com/9221e2ff17cff04f8f87794fe16a0fae199df68d_medium.jpg'e': 1,
+# 'primaryclanid': '103582791429521408',
+# 'timecreated': 1599678945,
+# 'personastateflags': 0
+
 class Player():
+
     def __init__(self,
         ID : int = None,
         steamID : str = None,
         communityVisibilityState : int = None,
         profileState : int = None,
         personaName : str = None,
+        commentpermission : int = None,
         profileURL : str = None,
         avatar : str = None,
         avatarMedium : str = None,
         avatarFull : str = None,
         avatarHash : str = None,
-        lastLogOff : int = None,
         personaState : int = None,
         primaryClanID : str = None,
         timeCreated : int = None,
@@ -28,7 +40,7 @@ class Player():
         self.__avatarMedium = avatarMedium
         self.__avatarFull = avatarFull
         self.__avatarHash = avatarHash
-        self.__lastLogOff = lastLogOff
+        self.__commentPermission = commentpermission
         self.__personaState = personaState
         self.__primaryClanID = primaryClanID
         self.__timeCreated = timeCreated
@@ -53,10 +65,10 @@ class Player():
         return self.__avatarMedium
     def getAvatarFull(self) -> str:
         return self.__avatarFull
-    def avatarHash(self) -> str:
+    def getAvatarHash(self) -> str:
         return self.__avatarHash
-    def getLastLogOff(self) -> int:
-        return self.__lastLogOff
+    def getCommentPermission(self) -> int:
+        return self.__commentPermission
     def getPersonaState(self) -> int:
         return self.__personaState
     def getPrimaryClanID(self) -> str:
@@ -88,8 +100,8 @@ class Player():
         self.__avatarFull = avatarFull
     def setAvatarHash(self, avatarHash : str) -> None:
         self.__avatarHash = avatarHash
-    def setLastLogOff(self, lastLogOff : int) -> None:
-        self.__lastLogOff = lastLogOff
+    def setCommentPermission(self, commentPermission : int) -> None:
+        self.__commentPermission = commentPermission
     def setPersonaState(self, personaState : int) -> None:
         self.__personaState = personaState
     def setPrimaryClanID(self, primaryClanID : str) -> None:
@@ -102,7 +114,7 @@ class Player():
         self.__createdTime = createdTime
     
     def __str__(self) -> str:
-        return f"Player(id={self.__ID}, steamID={self.__steamID}, communityVisibilityState={self.__communityVisibilityState}, profileState={self.__profileState}, personaName={self.__personaName}, profileURL={self.__profileURL}, avatar={self.__avatar}, avatarMedium={self.__avatarMedium}, avatarFull={self.__avatarFull}, avatarHash={self.__avatarHash}, lastLogOff={self.__lastLogOff}, personaState={self.__personaState}, primaryClanID={self.__primaryClanID}, timeCreated={self.__timeCreated}, personaStateFlags={self.__personaStateFlags}, createdTime={self.__createdTime})"        
+        return f"Player(id={self.__ID}, steamID={self.__steamID}, communityVisibilityState={self.__communityVisibilityState}, profileState={self.__profileState}, personaName={self.__personaName}, profileURL={self.__profileURL}, avatar={self.__avatar}, avatarMedium={self.__avatarMedium}, avatarFull={self.__avatarFull}, avatarHash={self.__avatarHash}, commentPermission={self.__commentPermission}, personaState={self.__personaState}, primaryClanID={self.__primaryClanID}, timeCreated={self.__timeCreated}, personaStateFlags={self.__personaStateFlags}, createdTime={self.__createdTime})"        
     
     def getVariableType(self) -> str:
-        return f"Player(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityVisibilityState={type(self.__communityVisibilityState)}, profileState={type(self.__profileState)}, personaName={type(self.__personaName)}, profileURL={type(self.__profileURL)}, avatar={type(self.__avatar)}, avatarMedium={type(self.__avatarMedium)}, avatarFull={type(self.__avatarFull)}, avatarHash={type(self.__avatarHash)}, lastLogOff={type(self.__lastLogOff)}, personaState={type(self.__personaState)}, primaryClanID={type(self.__primaryClanID)}, timeCreated={type(self.__timeCreated)}, personaStateFlags={type(self.__personaStateFlags)}, createdTime={type(self.__createdTime)})"        
+        return f"Player(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityVisibilityState={type(self.__communityVisibilityState)}, profileState={type(self.__profileState)}, personaName={type(self.__personaName)}, profileURL={type(self.__profileURL)}, avatar={type(self.__avatar)}, avatarMedium={type(self.__avatarMedium)}, avatarFull={type(self.__avatarFull)}, avatarHash={type(self.__avatarHash)}, commentPermission={type(self.__commentPermission)}, personaState={type(self.__personaState)}, primaryClanID={type(self.__primaryClanID)}, timeCreated={type(self.__timeCreated)}, personaStateFlags={type(self.__personaStateFlags)}, createdTime={type(self.__createdTime)})"        

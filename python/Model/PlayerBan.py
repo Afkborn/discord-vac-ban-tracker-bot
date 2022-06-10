@@ -20,7 +20,12 @@ class PlayerBan():
         self.__numberOfVACBans = NumberOfVACBans
         self.__daysSinceLastBan = DaysSinceLastBan
         self.__numberOfGameBans = NumberOfGameBans
-        self.__economyBan = EconomyBan
+        
+        if EconomyBan == "none":
+            self.__economyBan = None
+        else:
+            self.__economyBan = EconomyBan
+            
         self.__createdTime = CreatedTime
     
     def getID(self) -> int:
