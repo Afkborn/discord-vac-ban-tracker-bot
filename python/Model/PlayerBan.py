@@ -1,5 +1,4 @@
 
-
 class PlayerBan():
     def __init__(self, 
         ID : int = None,
@@ -55,7 +54,7 @@ class PlayerBan():
     def setcommunityBanned(self, communityBanned : bool) -> None:
         self.__communityBanned = communityBanned
     def setVACBanned(self, VACBanned : bool) -> None:
-        self.__VACBanned
+        self.__VACBanned = VACBanned
     def setNumberOfVACBans(self, NumberOfVACBans : int) -> None:
         self.__numberOfVACBans = NumberOfVACBans
     def setDaysSinceLastBan(self, DaysSinceLastBan : int) -> None:
@@ -72,4 +71,25 @@ class PlayerBan():
     
     def getVariableType(self) -> str:
         return f"PlayerBan(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityBanned={type(self.__communityBanned)}, VACBanned={type(self.__VACBanned)}, NumberOfVACBans={type(self.__numberOfVACBans)}, DaysSinceLastBan={type(self.__daysSinceLastBan)}, NumberOfGameBans={type(self.__numberOfGameBans)}, EconomyBan={type(self.__economyBan)}, CreatedTime={type(self.__createdTime)})"
-                    
+    
+    def getVacBanEmoji(self) -> str:
+        if self.__VACBanned:
+            return ":white_check_mark:"
+        else:
+            return ":x:"
+    
+    def getCommunityBannedEmoji(self) -> str:
+        if self.__communityBanned:
+            return ":white_check_mark:"
+        else:
+            return ":x:"
+    
+    def getEconomyBanEmoji(self) -> str:
+        if self.__economyBan == None:
+            return ":x:"
+        else:
+            return ":white_check_mark:"
+
+    
+
+    

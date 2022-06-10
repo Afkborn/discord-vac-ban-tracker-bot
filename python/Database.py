@@ -62,7 +62,7 @@ class Database():
     def addPlayer(self, player:Player):
         
         if (self.getPlayerWithSteamID(player.getSteamID()) != None):
-            print("Player already in database")
+            
             return False
         
         self.openDB()

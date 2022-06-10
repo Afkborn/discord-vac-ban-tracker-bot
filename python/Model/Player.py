@@ -9,7 +9,7 @@
 # 'primaryclanid': '103582791429521408',
 # 'timecreated': 1599678945,
 # 'personastateflags': 0
-
+from time import time
 class Player():
 
     def __init__(self,
@@ -118,3 +118,10 @@ class Player():
     
     def getVariableType(self) -> str:
         return f"Player(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityVisibilityState={type(self.__communityVisibilityState)}, profileState={type(self.__profileState)}, personaName={type(self.__personaName)}, profileURL={type(self.__profileURL)}, avatar={type(self.__avatar)}, avatarMedium={type(self.__avatarMedium)}, avatarFull={type(self.__avatarFull)}, avatarHash={type(self.__avatarHash)}, commentPermission={type(self.__commentPermission)}, personaState={type(self.__personaState)}, primaryClanID={type(self.__primaryClanID)}, timeCreated={type(self.__timeCreated)}, personaStateFlags={type(self.__personaStateFlags)}, createdTime={type(self.__createdTime)})"        
+    
+    def getYearsTimeCreated(self) -> int:
+
+        uyeOlmaTarihi = time()  - self.__timeCreated
+        uyeOlmaTarihi = uyeOlmaTarihi / 31556926
+        uyeOlmaTarihi = int(uyeOlmaTarihi)
+        return uyeOlmaTarihi
