@@ -180,11 +180,12 @@ class SteamTracker:
         return steam64id
     
     def getGameWithID(self,gameID: int):
-        response = requests.get(f"https://store.steampowered.com/api/appdetails?appids={gameID}")
-        data = response.json()[str(gameID)]["data"]['detailed_description']
-        #TODO
-        print(data)
-        return data
+        try: 
+            response = requests.get(f"https://store.steampowered.com/api/appdetails?appids={gameID}")
+            data = response.json()[str(gameID)]["data"]
+            return data
+        except:
+            print(F"Error: Game with ID {gameID} not found")
     
     def isDLC(self,gameID: int):
         response = requests.get(f"https://store.steampowered.com/api/appdetails?appids={gameID}")
