@@ -14,7 +14,7 @@ from time import time
 
 import requests
 
-class PlayerTracker:
+class SteamTracker:
     def __init__(self, STEAM_API_KEY:str) -> None:
         self.steamuserinfo = ISteamUser(steam_api_key=STEAM_API_KEY)
         
@@ -60,7 +60,6 @@ class PlayerTracker:
             steamID = playerinfo['steamid']
             communityvisibilitystate = playerinfo['communityvisibilitystate']
             if communityvisibilitystate == 2 or communityvisibilitystate == 1:
-                
                 timecreated = 0
                 primaryclanid = 0
                 personastateflags = 0
@@ -113,7 +112,11 @@ class PlayerTracker:
                 gameextrainfo = playerinfo['gameextrainfo']
             else:
                 gameextrainfo  = None
-            myPlayer = Player(steamID=steamID,communityVisibilityState=communityvisibilitystate,profileState=profilestate,personaName=personaname,commentpermission=commentpermission,profileURL=profileurl,avatar=avatar,avatarMedium=avatarmedium,avatarFull=avatarfull,avatarHash=avatarhash,personaState=personastate,primaryClanID=primaryclanid,timeCreated=timecreated,personaStateFlags=personastateflags,createdTime=time(),loccountrycode=loccountrycode,locstatecode=locstatecode,loccityid=loccityid,realname=realname,gameid=gameid,gameserverip=gameserverip,gameextrainfo=gameextrainfo)
+            if 'lastlogoff' in playerinfo:
+                lastlogoff = playerinfo['lastlogoff']
+            else:
+                lastlogoff = 0
+            myPlayer = Player(steamID=steamID,communityVisibilityState=communityvisibilitystate,profileState=profilestate,personaName=personaname,commentpermission=commentpermission,profileURL=profileurl,avatar=avatar,avatarMedium=avatarmedium,avatarFull=avatarfull,avatarHash=avatarhash,personaState=personastate,primaryClanID=primaryclanid,timeCreated=timecreated,personaStateFlags=personastateflags,createdTime=time(),loccountrycode=loccountrycode,locstatecode=locstatecode,loccityid=loccityid,realname=realname,gameid=gameid,gameserverip=gameserverip,gameextrainfo=gameextrainfo,lastlogoff=lastlogoff)
             return myPlayer
         else:
             print(f"Error: Multiple users returned")
@@ -175,3 +178,22 @@ class PlayerTracker:
         if id_split[1] == "1":
             steam64id += 1
         return steam64id
+    
+    def getGameWithID(self,gameID: int):
+        response = requests.get(f"https://store.steampowered.com/api/appdetails?appids={gameID}")
+        data = response.json()[str(gameID)]["data"]['detailed_description']
+        #TODO
+        print(data)
+        return data
+    
+    def isDLC(self,gameID: int):
+        response = requests.get(f"https://store.steampowered.com/api/appdetails?appids={gameID}")
+        data = response.json()[str(gameID)]["data"]['type']
+        if data == "game":
+            return False
+        elif data == "dlc":
+            return True
+        else:
+            print(data)
+            return False
+

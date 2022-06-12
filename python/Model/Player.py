@@ -11,6 +11,7 @@
 # 'personastateflags': 0
 ## loccountrycode, locstatecode, loccityid, realname her zaman yok hesap public ise oluyor
 from time import time
+from ..Timer import *
 class Player():
 
     def __init__(self,
@@ -30,6 +31,7 @@ class Player():
         timeCreated : int = None,
         personaStateFlags : int = None,
         createdTime : float = None,
+        lastlogoff : int = None,
         loccountrycode : str = None,
         locstatecode : str = None,
         loccityid : int = None,
@@ -54,6 +56,7 @@ class Player():
         self.__timeCreated = timeCreated
         self.__personaStateFlags = personaStateFlags
         self.__createdTime = createdTime
+        self.__lastlogoff = lastlogoff
         
         #private
         self.__locCountryCode = loccountrycode
@@ -96,6 +99,8 @@ class Player():
         return self.__personaStateFlags
     def getCreatedTime(self) -> float:
         return self.__createdTime
+    def getLastlogoff(self) -> int:
+        return self.__lastlogoff
     def getLocCountryCode(self) -> str:
         return self.__locCountryCode
     def getLocStateCode(self) -> str:
@@ -145,6 +150,8 @@ class Player():
         self.__personaStateFlags = personaStateFlags
     def setCreatedTime(self, createdTime : float) -> None:
         self.__createdTime = createdTime
+    def setLastlogoff(self, lastlogoff : int) -> None:
+        self.__lastlogoff = lastlogoff
     def setLocCountryCode(self, locCountryCode : str) -> None:
         self.__locCountryCode = locCountryCode
     def setLocStateCode(self, locStateCode : str) -> None:
@@ -162,22 +169,27 @@ class Player():
         
     
     def __str__(self) -> str:
-        return f"Player(id={self.__ID}, steamID={self.__steamID}, communityVisibilityState={self.__communityVisibilityState}, profileState={self.__profileState}, personaName={self.__personaName}, profileURL={self.__profileURL}, avatar={self.__avatar}, avatarMedium={self.__avatarMedium}, avatarFull={self.__avatarFull}, avatarHash={self.__avatarHash}, commentPermission={self.__commentPermission}, personaState={self.__personaState}, primaryClanID={self.__primaryClanID}, timeCreated={self.__timeCreated}, personaStateFlags={self.__personaStateFlags}, createdTime={self.__createdTime}, locCountryCode={self.__locCountryCode}, locStateCode={self.__locStateCode}, locCityID={self.__locCityID}, realName={self.__realName}, gameid={self.__gameid}, gameextrainfo={self.__gameextrainfo}, gameserverip={self.__gameserverip})"        
+        return f"Player(id={self.__ID}, steamID={self.__steamID}, communityVisibilityState={self.__communityVisibilityState}, profileState={self.__profileState}, personaName={self.__personaName}, profileURL={self.__profileURL}, avatar={self.__avatar}, avatarMedium={self.__avatarMedium}, avatarFull={self.__avatarFull}, avatarHash={self.__avatarHash}, commentPermission={self.__commentPermission}, personaState={self.__personaState}, primaryClanID={self.__primaryClanID}, timeCreated={self.__timeCreated}, personaStateFlags={self.__personaStateFlags}, createdTime={self.__createdTime}, lastLogOff={self.__lastlogoff}, locCountryCode={self.__locCountryCode}, locStateCode={self.__locStateCode}, locCityID={self.__locCityID}, realName={self.__realName}, gameid={self.__gameid}, gameextrainfo={self.__gameextrainfo}, gameserverip={self.__gameserverip})"        
     
     def getVariableType(self) -> str:
-        return f"Player(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityVisibilityState={type(self.__communityVisibilityState)}, profileState={type(self.__profileState)}, personaName={type(self.__personaName)}, profileURL={type(self.__profileURL)}, avatar={type(self.__avatar)}, avatarMedium={type(self.__avatarMedium)}, avatarFull={type(self.__avatarFull)}, avatarHash={type(self.__avatarHash)}, commentPermission={type(self.__commentPermission)}, personaState={type(self.__personaState)}, primaryClanID={type(self.__primaryClanID)}, timeCreated={type(self.__timeCreated)}, personaStateFlags={type(self.__personaStateFlags)}, createdTime={type(self.__createdTime)}, locCountryCode={type(self.__locCountryCode)}, locStateCode={type(self.__locStateCode)}, locCityID={type(self.__locCityID)}, realName={type(self.__realName)}, gameid={type(self.__gameid)}, gameextrainfo={type(self.__gameextrainfo)}, gameserverip={type(self.__gameserverip)})"
+        return f"Player(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityVisibilityState={type(self.__communityVisibilityState)}, profileState={type(self.__profileState)}, personaName={type(self.__personaName)}, profileURL={type(self.__profileURL)}, avatar={type(self.__avatar)}, avatarMedium={type(self.__avatarMedium)}, avatarFull={type(self.__avatarFull)}, avatarHash={type(self.__avatarHash)}, commentPermission={type(self.__commentPermission)}, personaState={type(self.__personaState)}, primaryClanID={type(self.__primaryClanID)}, timeCreated={type(self.__timeCreated)}, personaStateFlags={type(self.__personaStateFlags)}, createdTime={type(self.__createdTime)}, lastLogOff={type(self.__lastlogoff)}, locCountryCode={type(self.__locCountryCode)}, locStateCode={type(self.__locStateCode)}, locCityID={type(self.__locCityID)}, realName={type(self.__realName)}, gameid={type(self.__gameid)}, gameextrainfo={type(self.__gameextrainfo)}, gameserverip={type(self.__gameserverip)})"
     
     def getYearsTimeCreated(self) -> int:
+        if self.__timeCreated == 0:
+            return 0
+        return get_relevant_time_created(self.__timeCreated)
+        
+    
+    def getLastOnlineDate(self) -> str:
+        if self.__lastlogoff == None:
+            return ""
+        return get_relevant_last_online_date(self.__lastlogoff)
 
-        uyeOlmaTarihi = time()  - self.__timeCreated
-        uyeOlmaTarihi = uyeOlmaTarihi / 31556926
-        uyeOlmaTarihi = int(uyeOlmaTarihi)
-        return uyeOlmaTarihi
+    
     def getPersonaStateText(self) -> str:
-        # 0 - Offline, 1 - Online, 2 - Busy, 3 - Away, 4 - Snooze, 5 - looking to trade, 6 - looking to play
         fullText = ""
         if (self.__personaState == 0):
-            fullText += "Offline\n"
+            fullText += f"Offline\nLast Online: {self.getLastOnlineDate()}"
         elif (self.__personaState == 1):
             fullText += "Online\n"
         elif (self.__personaState == 2):
@@ -192,7 +204,7 @@ class Player():
             fullText += "Looking to play\n"
         
         if (self.__gameextrainfo != None):
-            fullText += f"Game: {self.__gameextrainfo}"
+            fullText += f"Game: {self.__gameextrainfo} (Detail $game {self.__gameid})"
         if (self.__gameserverip != None):
             fullText += f"Server: {self.__gameserverip}"
         return fullText

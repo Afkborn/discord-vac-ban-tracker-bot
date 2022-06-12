@@ -1,10 +1,7 @@
 from python.globalVariables import *
 import json
 
-def getCountryNameWithCode(countryCode : str):
-    with open(STEAM_COUNTRIES_LOC) as f:
-        data = json.load(f)
-        return data[countryCode]['name']
+
 
 
 def getCountryDetail(countryCode: str = None, locstatecode : str = None, loccityid : int = None):

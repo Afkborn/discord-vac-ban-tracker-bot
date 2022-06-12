@@ -1,32 +1,34 @@
 from time import mktime, time
 from discord.ext import commands
 from discord import Embed, Color, Game
+from python.TextFunction import splitTextByLength
 
 from python.globalVariables import *
 from python.VacLogging import *
 from python.Database import Database
-from python.PlayerTracker import PlayerTracker
+from python.SteamTracker import SteamTracker
 from python.Timer import *
 from python.Model.DiscordUser import DiscordUser
-from python.GetCountryDetail import *
+from python.SteamCountries import *
+from python.SteamGames import *
 setLogger()
 
 myDatabase = Database()
-playerTracker = PlayerTracker(STEAM_API_KEY=STEAM_API_KEY)
+steamTracker = SteamTracker(STEAM_API_KEY=STEAM_API_KEY)
 bot = commands.Bot(command_prefix='$')
 
 @bot.command()
 async def track(message, arg):
-    if not (playerTracker.checkSteamID(arg)):
+    if not (steamTracker.checkSteamID(arg)):
         await message.send("Error: SteamID is not valid")
         return
     
-    player = playerTracker.getPlayer(arg)
+    player = steamTracker.getPlayer(arg)
     if (player == None):
         await message.send("Error: SteamID is not in steam database, check steamid")
         return
     
-    playerBan = playerTracker.getPlayerBan(arg)
+    playerBan = steamTracker.getPlayerBan(arg)
     if (playerBan == None):
         await message.send("Error: SteamID is not in steam database, check steamid")
         return
@@ -39,11 +41,13 @@ async def track(message, arg):
         embedMessage.add_field(name="Community Visibility", value="```diff\n-This player is private-```", inline=False)
         embedMessage.set_author(name=f"{player.getPersonaName()}", url=player.getProfileURL(), icon_url=player.getAvatar())
     elif player.getCommunityVisibilityState() == 3:
-        playerLevel = playerTracker.getSteamLevel(arg)
-        CSGO_total_played = playerTracker.getTotalTimePlayedCSGO(arg) 
+        playerLevel = steamTracker.getSteamLevel(arg)
+        CSGO_total_played = steamTracker.getTotalTimePlayedCSGO(arg) 
         embedMessage = Embed(color=Color.blue()) 
         embedMessage.set_author(name=f"{player.getPersonaName()} (Lvl {playerLevel})", url=player.getProfileURL(), icon_url=player.getAvatar())
-        embedMessage.add_field(name="Registration Date ", value=f"{player.getYearsTimeCreated()} years ago ({get_time_from_unix(player.getTimeCreated())})", inline=False)
+        date, type = player.getYearsTimeCreated()
+        embedMessage.add_field(name="Registration Date ", value=f"{date} {type}  ago ({get_time_from_unix(player.getTimeCreated())})", inline=False)
+            
         embedMessage.add_field(name="Status", value=f"{player.getPersonaStateText()}", inline=False)
         
         embedMessage.add_field(name="Community Ban", value=f"{playerBan.getCommunityBannedEmoji()}", inline=False)
@@ -62,7 +66,8 @@ async def track(message, arg):
         if (player.getLocCountryCode() != None):
             countryName, countryStateName, countryStateCityName = getCountryDetail(player.getLocCountryCode(), player.getLocStateCode(), player.getLocCityID())
             fullText = ""
-            if countryStateCityName != None:
+            
+            if countryStateCityName != None and countryStateCityName != countryStateName:
                 fullText += f"{countryStateCityName}, "
             if countryStateName != None:
                 fullText += f"{countryStateName}, "
@@ -81,6 +86,32 @@ async def track(message, arg):
     embedMessage.set_footer(text=f"I'm following the situation, I'll let you know if there is a change")
     await message.send(embed=embedMessage)
 
+@bot.command()
+async def game(message,arg):
+    try:
+        gameID = int(arg)
+        result = steamTracker.getGameWithID(gameID)
+        await message.send(f"{result}")
+    except:
+        await message.send("Error: GameID is not valid")
+
+@bot.command()
+async def find_game(message,*args):
+    #TODO DLC LERİ LİSTELEMESİN
+    
+    arg = " ".join(args)
+    resultList = getIDwithGameName(arg)
+    text = f"I found {len(resultList)} results for {arg}\n"
+    for index ,(id, appname) in enumerate(resultList,start=1):
+        text += f"{index}. {appname} (ID:{id})\n"
+    text += "If you want to see more information about a game, use $game <gameID>"
+    if (len(text) > 2000):
+        splitedText = splitTextByLength(text,2000)
+        for text in splitedText:
+            await message.send(text)
+    else:
+        await message.send(text)
+    
 
 @bot.command()
 async def config(message):
@@ -90,7 +121,7 @@ async def config(message):
 # @bot.event
 # async def on_command_error(message, error):
 #     print(error)
-#     await message.send(f"An error occured: {str(error)} {error.__class__}")
+#     await message.send(f"An error occured: {str(error)}")
 
 @bot.event
 async def on_ready():
