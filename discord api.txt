@@ -1,0 +1,5 @@
+https://discordpy.readthedocs.io/en/latest/ext/commands/api.html?highlight=context#discord.ext.commands.Context
+https://discordpy.readthedocs.io/en/stable/api.html?highlight=message%20author#discord.Message.author
+https://discordpy.readthedocs.io/en/stable/api.html?highlight=message%20author#discord.Member
+
+https://discordpy.readthedocs.io/en/stable/api.html?highlight=message%20author#discord.Member.roles

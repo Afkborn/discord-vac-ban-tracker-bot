@@ -9,6 +9,7 @@
 # 'primaryclanid': '103582791429521408',
 # 'timecreated': 1599678945,
 # 'personastateflags': 0
+## loccountrycode, locstatecode, loccityid, realname her zaman yok hesap public ise oluyor
 from time import time
 class Player():
 
@@ -29,6 +30,13 @@ class Player():
         timeCreated : int = None,
         personaStateFlags : int = None,
         createdTime : float = None,
+        loccountrycode : str = None,
+        locstatecode : str = None,
+        loccityid : int = None,
+        realname : str = None,
+        gameid : str = None,
+        gameextrainfo : str = None,
+        gameserverip : str = None,
         ) -> None:
         self.__ID = ID
         self.__steamID = steamID
@@ -46,6 +54,15 @@ class Player():
         self.__timeCreated = timeCreated
         self.__personaStateFlags = personaStateFlags
         self.__createdTime = createdTime
+        
+        #private
+        self.__locCountryCode = loccountrycode
+        self.__locStateCode = locstatecode
+        self.__locCityID =  loccityid
+        self.__realName = realname
+        self.__gameid = gameid
+        self.__gameextrainfo = gameextrainfo
+        self.__gameserverip = gameserverip
         
     def getID(self) -> int:
         return self.__ID
@@ -79,6 +96,22 @@ class Player():
         return self.__personaStateFlags
     def getCreatedTime(self) -> float:
         return self.__createdTime
+    def getLocCountryCode(self) -> str:
+        return self.__locCountryCode
+    def getLocStateCode(self) -> str:
+        return self.__locStateCode
+    def getLocCityID(self) -> int:
+        return self.__locCityID
+    def getRealName(self) -> str:
+        return self.__realName
+    def getGameID(self) -> str:
+        return self.__gameid
+    def getGameExtraInfo(self) -> str:
+        return self.__gameextrainfo
+    def getGameServerIP(self) -> str:
+        return self.__gameserverip
+    
+        
     
     def setID(self, ID : int) -> None:
         self.__ID = ID
@@ -112,12 +145,27 @@ class Player():
         self.__personaStateFlags = personaStateFlags
     def setCreatedTime(self, createdTime : float) -> None:
         self.__createdTime = createdTime
+    def setLocCountryCode(self, locCountryCode : str) -> None:
+        self.__locCountryCode = locCountryCode
+    def setLocStateCode(self, locStateCode : str) -> None:
+        self.__locStateCode = locStateCode
+    def setLocCityID(self, locCityID : int) -> None:
+        self.__locCityID = locCityID
+    def setRealName(self, realName : str) -> None:
+        self.__realName = realName
+    def setGameID(self, gameID : str) -> None:
+        self.__gameid = gameID
+    def setGameExtraInfo(self, gameExtraInfo : str) -> None:
+        self.__gameextrainfo = gameExtraInfo
+    def setGameServerIP(self, gameServerIP : str) -> None:
+        self.__gameserverip = gameServerIP
+        
     
     def __str__(self) -> str:
-        return f"Player(id={self.__ID}, steamID={self.__steamID}, communityVisibilityState={self.__communityVisibilityState}, profileState={self.__profileState}, personaName={self.__personaName}, profileURL={self.__profileURL}, avatar={self.__avatar}, avatarMedium={self.__avatarMedium}, avatarFull={self.__avatarFull}, avatarHash={self.__avatarHash}, commentPermission={self.__commentPermission}, personaState={self.__personaState}, primaryClanID={self.__primaryClanID}, timeCreated={self.__timeCreated}, personaStateFlags={self.__personaStateFlags}, createdTime={self.__createdTime})"        
+        return f"Player(id={self.__ID}, steamID={self.__steamID}, communityVisibilityState={self.__communityVisibilityState}, profileState={self.__profileState}, personaName={self.__personaName}, profileURL={self.__profileURL}, avatar={self.__avatar}, avatarMedium={self.__avatarMedium}, avatarFull={self.__avatarFull}, avatarHash={self.__avatarHash}, commentPermission={self.__commentPermission}, personaState={self.__personaState}, primaryClanID={self.__primaryClanID}, timeCreated={self.__timeCreated}, personaStateFlags={self.__personaStateFlags}, createdTime={self.__createdTime}, locCountryCode={self.__locCountryCode}, locStateCode={self.__locStateCode}, locCityID={self.__locCityID}, realName={self.__realName}, gameid={self.__gameid}, gameextrainfo={self.__gameextrainfo}, gameserverip={self.__gameserverip})"        
     
     def getVariableType(self) -> str:
-        return f"Player(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityVisibilityState={type(self.__communityVisibilityState)}, profileState={type(self.__profileState)}, personaName={type(self.__personaName)}, profileURL={type(self.__profileURL)}, avatar={type(self.__avatar)}, avatarMedium={type(self.__avatarMedium)}, avatarFull={type(self.__avatarFull)}, avatarHash={type(self.__avatarHash)}, commentPermission={type(self.__commentPermission)}, personaState={type(self.__personaState)}, primaryClanID={type(self.__primaryClanID)}, timeCreated={type(self.__timeCreated)}, personaStateFlags={type(self.__personaStateFlags)}, createdTime={type(self.__createdTime)})"        
+        return f"Player(id={type(self.__ID)}, steamID={type(self.__steamID)}, communityVisibilityState={type(self.__communityVisibilityState)}, profileState={type(self.__profileState)}, personaName={type(self.__personaName)}, profileURL={type(self.__profileURL)}, avatar={type(self.__avatar)}, avatarMedium={type(self.__avatarMedium)}, avatarFull={type(self.__avatarFull)}, avatarHash={type(self.__avatarHash)}, commentPermission={type(self.__commentPermission)}, personaState={type(self.__personaState)}, primaryClanID={type(self.__primaryClanID)}, timeCreated={type(self.__timeCreated)}, personaStateFlags={type(self.__personaStateFlags)}, createdTime={type(self.__createdTime)}, locCountryCode={type(self.__locCountryCode)}, locStateCode={type(self.__locStateCode)}, locCityID={type(self.__locCityID)}, realName={type(self.__realName)}, gameid={type(self.__gameid)}, gameextrainfo={type(self.__gameextrainfo)}, gameserverip={type(self.__gameserverip)})"
     
     def getYearsTimeCreated(self) -> int:
 
@@ -125,3 +173,26 @@ class Player():
         uyeOlmaTarihi = uyeOlmaTarihi / 31556926
         uyeOlmaTarihi = int(uyeOlmaTarihi)
         return uyeOlmaTarihi
+    def getPersonaStateText(self) -> str:
+        # 0 - Offline, 1 - Online, 2 - Busy, 3 - Away, 4 - Snooze, 5 - looking to trade, 6 - looking to play
+        fullText = ""
+        if (self.__personaState == 0):
+            fullText += "Offline\n"
+        elif (self.__personaState == 1):
+            fullText += "Online\n"
+        elif (self.__personaState == 2):
+            fullText += "Busy\n"
+        elif (self.__personaState == 3):
+            fullText += "Away\n"
+        elif (self.__personaState == 4):
+            fullText += "Snooze(zZz!)\n"
+        elif (self.__personaState == 5):
+            fullText += "Looking to trade\n"
+        elif (self.__personaState == 6):
+            fullText += "Looking to play\n"
+        
+        if (self.__gameextrainfo != None):
+            fullText += f"Game: {self.__gameextrainfo}"
+        if (self.__gameserverip != None):
+            fullText += f"Server: {self.__gameserverip}"
+        return fullText

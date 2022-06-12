@@ -20,47 +20,47 @@ class PlayerTracker:
         
     def checkSteamID(self,steamid:str) -> Boolean:
         if ("https" in steamid):
-            if (steamid[-1] == "/"):
+            if (steamid[-1] != "/"):
+                steamid +=  "/"
+            if ('profiles' in steamid):
                 steamid = steamid.split("/")[-2]
-            else:
-                print(steamid)
-                steamid = steamid.split("/")[-1]
-            if (steamid.isdigit()):
-                return True
-            return False
-                
-        print(steamid)
-        if steamid.isdigit():
-            return True
-        
-        return False
-        
-    def clearSteamID(self,steamid:str) -> str:
-        if ("https" in steamid):
-            steamid = steamid.split("/")[-2]
-            if (steamid.isdigit()):
                 return steamid
-            return None
-        else:
+            elif ('id' in steamid):
+                steamid = steamid.split("/")[-2]
+                result = self.getSteamIDFromVanityURL(steamid)
+                if result == 0:
+                    return False
+                else:
+                    return result
+                
+        if steamid.isdigit():
             return steamid
+        if (steamid.startswith("STEAM_")):
+            return self.steamid_to_64bit(steamid)
+        
+        result = self.getSteamIDFromVanityURL(steamid)
+        if result != 0:
+            return result
+        return False
+
         
     
     def getPlayer(self, steamid: str) -> Player:
-        if not (self.checkSteamID(steamid)):
-            #ERROR: steamid is not a valid steamid
+        steamid = self.checkSteamID(steamid)
+        if (steamid == False):
             print("Error: SteamID is not valid")
             return None
-        steamid = self.clearSteamID(steamid)
+        
         playerinfo = self.steamuserinfo.get_player_summaries(steamIDS=steamid)['response']['players']
         if len(playerinfo) == 0:
             return None
         elif len(playerinfo) == 1:
-            
+            print(playerinfo)
             playerinfo = playerinfo[0]
             steamID = playerinfo['steamid']
             communityvisibilitystate = playerinfo['communityvisibilitystate']
             if communityvisibilitystate == 2 or communityvisibilitystate == 1:
-                print("PRIVATE")
+                
                 timecreated = 0
                 primaryclanid = 0
                 personastateflags = 0
@@ -85,18 +85,45 @@ class PlayerTracker:
             avatarhash = playerinfo['avatarhash']
             personastate = playerinfo['personastate']
             
-            myPlayer = Player(steamID=steamID,communityVisibilityState=communityvisibilitystate,profileState=profilestate,personaName=personaname,commentpermission=commentpermission,profileURL=profileurl,avatar=avatar,avatarMedium=avatarmedium,avatarFull=avatarfull,avatarHash=avatarhash,personaState=personastate,primaryClanID=primaryclanid,timeCreated=timecreated,personaStateFlags=personastateflags,createdTime=time())
+            if 'loccountrycode' in playerinfo:
+                loccountrycode = playerinfo['loccountrycode']
+            else:
+                loccountrycode = None
+            if 'locstatecode' in playerinfo:
+                locstatecode = playerinfo['locstatecode']
+            else:
+                locstatecode = None
+            if 'loccityid' in playerinfo:
+                loccityid = playerinfo['loccityid']
+            else:
+                loccityid = None
+            if 'realname' in playerinfo:
+                realname = playerinfo['realname']
+            else:
+                realname = None
+            if 'gameid' in playerinfo:
+                gameid = playerinfo['gameid']
+            else:
+                gameid = None
+            if 'gameserverip' in playerinfo:
+                gameserverip = playerinfo['gameserverip']
+            else:
+                gameserverip = None
+            if 'gameextrainfo' in playerinfo:
+                gameextrainfo = playerinfo['gameextrainfo']
+            else:
+                gameextrainfo  = None
+            myPlayer = Player(steamID=steamID,communityVisibilityState=communityvisibilitystate,profileState=profilestate,personaName=personaname,commentpermission=commentpermission,profileURL=profileurl,avatar=avatar,avatarMedium=avatarmedium,avatarFull=avatarfull,avatarHash=avatarhash,personaState=personastate,primaryClanID=primaryclanid,timeCreated=timecreated,personaStateFlags=personastateflags,createdTime=time(),loccountrycode=loccountrycode,locstatecode=locstatecode,loccityid=loccityid,realname=realname,gameid=gameid,gameserverip=gameserverip,gameextrainfo=gameextrainfo)
             return myPlayer
         else:
             print(f"Error: Multiple users returned")
             return None
     
     def getPlayerBan(self, steamid: str) -> PlayerBan:
-        if not (self.checkSteamID(steamid)):
-            #ERROR: steamid is not a valid steamid
+        steamid = self.checkSteamID(steamid)
+        if (steamid == False):
             print("Error: SteamID is not valid")
             return None
-        steamid = self.clearSteamID(steamid)
         userban = self.steamuserinfo.get_player_bans(steamIDS=steamid)['players']
         if len(userban) == 0:
             return None
@@ -109,41 +136,42 @@ class PlayerTracker:
             return None
         
     def getSteamLevel(self,steamid: str) -> int:
-        if not (self.checkSteamID(steamid)):
-            #ERROR: steamid is not a valid steamid
+        steamid = self.checkSteamID(steamid)
+        if (steamid == False):
             print("Error: SteamID is not valid")
             return None
-        steamid = self.clearSteamID(steamid)
         try:
             response = requests.get(f"https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key={STEAM_API_KEY}&steamid={steamid}")
             return response.json()['response']['player_level']
         except:
-            print("Error: SteamID is not valid")
-            return 0
-    def getPlayerStat(self,steamid: str, gameid :int):
-        if not (self.checkSteamID(steamid)):
-            #ERROR: steamid is not a valid steamid
-            print("Error: SteamID is not valid")
-            return None
-        steamid = self.clearSteamID(steamid)
-        try:
-            response = requests.get(f"https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={gameid}&key={STEAM_API_KEY}&steamid={steamid}")
-            #TODO SONRA HALLEDERİK :d
-            return 0
-        except:
-            print("Error: SteamID is not valid")
+            print("Error: Steam Level")
             return 0
         
     def getTotalTimePlayedCSGO(self, steamid:str) -> int:
-        if not (self.checkSteamID(steamid)):
-            #ERROR: steamid is not a valid steamid
+        steamid = self.checkSteamID(steamid)
+        if (steamid == False):
             print("Error: SteamID is not valid")
             return None
-        steamid = self.clearSteamID(steamid)
         try:
             response = requests.get(f"https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v2/?appid={CSGO_APP_ID}&key={STEAM_API_KEY}&steamid={steamid}")
             return response.json()['playerstats']['stats'][2]['value']
         except:
-            print("Error: SteamID is not valid")
+            print("Error: TotalTimePlayedCSGO")
+            return None
+        
+    def getSteamIDFromVanityURL(self, vanityURL:str):
+        try:
+            response = requests.get(f"https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={STEAM_API_KEY}&vanityurl={vanityURL}")
+            return response.json()['response']['steamid']
+        except:
+            print("Error: SteamIDFromVanitryURL")
             return 0
         
+    def steamid_to_64bit(self,steamid):
+        steam64id = 76561197960265728 # I honestly don't know where
+                                        # this came from, but it works...
+        id_split = steamid.split(":")
+        steam64id += int(id_split[2]) * 2 # again, not sure why multiplying by 2...
+        if id_split[1] == "1":
+            steam64id += 1
+        return steam64id

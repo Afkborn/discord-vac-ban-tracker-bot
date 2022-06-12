@@ -1,13 +1,14 @@
 from time import mktime, time
 from discord.ext import commands
 from discord import Embed, Color, Game
+
 from python.globalVariables import *
 from python.VacLogging import *
 from python.Database import Database
 from python.PlayerTracker import PlayerTracker
 from python.Timer import *
 from python.Model.DiscordUser import DiscordUser
-
+from python.GetCountryDetail import *
 setLogger()
 
 myDatabase = Database()
@@ -43,6 +44,8 @@ async def track(message, arg):
         embedMessage = Embed(color=Color.blue()) 
         embedMessage.set_author(name=f"{player.getPersonaName()} (Lvl {playerLevel})", url=player.getProfileURL(), icon_url=player.getAvatar())
         embedMessage.add_field(name="Registration Date ", value=f"{player.getYearsTimeCreated()} years ago ({get_time_from_unix(player.getTimeCreated())})", inline=False)
+        embedMessage.add_field(name="Status", value=f"{player.getPersonaStateText()}", inline=False)
+        
         embedMessage.add_field(name="Community Ban", value=f"{playerBan.getCommunityBannedEmoji()}", inline=False)
         embedMessage.add_field(name="Trade Ban", value=f"{playerBan.getEconomyBanEmoji()}",inline =False)
         if (playerBan.getNumberOfGameBans() == 0):
@@ -53,7 +56,21 @@ async def track(message, arg):
             embedMessage.add_field(name=f"VAC Ban", value=f"{playerBan.getNumberOfVACBans()} ban ({playerBan.getDaysSinceLastBan()} days ago)", inline=False)
         else:
             embedMessage.add_field(name="VAC Ban", value=f"{playerBan.getVacBanEmoji()}", inline=False)  
-        embedMessage.add_field(name="CS GO Total Play Time", value=f"{CSGO_total_played}", inline=False) 
+            
+        if (player.getRealName() != None):
+            embedMessage.add_field(name="Real Name", value=f"{player.getRealName()}", inline=False)
+        if (player.getLocCountryCode() != None):
+            countryName, countryStateName, countryStateCityName = getCountryDetail(player.getLocCountryCode(), player.getLocStateCode(), player.getLocCityID())
+            fullText = ""
+            if countryStateCityName != None:
+                fullText += f"{countryStateCityName}, "
+            if countryStateName != None:
+                fullText += f"{countryStateName}, "
+            if countryName != None:
+                fullText += f"{countryName}"
+            embedMessage.add_field(name="Location", value=f"{fullText} :flag_{player.getLocCountryCode().lower()}:", inline=False)
+        if (CSGO_total_played != None):
+            embedMessage.add_field(name="CS GO Total Play Time", value=f"{CSGO_total_played}", inline=False) 
         
     else:
         embedMessage = Embed(color=Color.red())
@@ -70,9 +87,10 @@ async def config(message):
     if (message.author.id == ADMIN_DISCORD_ID):
         await message.send(f"PRINT CONFIG")
 
-@bot.event
-async def on_command_error(message, error):
-    await message.send(f"An error occured: {str(error)}")
+# @bot.event
+# async def on_command_error(message, error):
+#     print(error)
+#     await message.send(f"An error occured: {str(error)} {error.__class__}")
 
 @bot.event
 async def on_ready():
