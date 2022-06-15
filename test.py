@@ -1,7 +1,7 @@
 from h11 import Data
 from python.BotDatabase import Database
 from python.SteamGames import getIDwithGameName
-from python.SteamTracker import SteamTracker
+from python.SteamAPI_Service import SteamAPI_Service
 from python.globalVariables import STEAM_API_KEY
 from python.SteamCountries import *
 

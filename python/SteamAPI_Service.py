@@ -12,8 +12,8 @@ from time import time
 
 import requests
 
-class SteamTracker:
-    def __init__(self, STEAM_API_KEY:str) -> None:
+class SteamAPI_Service:
+    def __init__(self) -> None:
         self.steamuserinfo = ISteamUser(steam_api_key=STEAM_API_KEY)
         
     def checkSteamID(self,steamid:str) -> bool:
@@ -53,7 +53,7 @@ class SteamTracker:
         if len(playerinfo) == 0:
             return None
         elif len(playerinfo) == 1:
-            print(playerinfo)
+
             playerinfo = playerinfo[0]
             steamID = playerinfo['steamid']
             communityvisibilitystate = playerinfo['communityvisibilitystate']

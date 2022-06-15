@@ -1,8 +1,8 @@
 from python.globalVariables import *
 import json
 
-from python.SteamTracker import SteamTracker
-myTracker = SteamTracker(STEAM_API_KEY)
+from python.SteamAPI_Service import SteamAPI_Service
+myTracker = SteamAPI_Service()
 
 def getIDwithGameName(gameName:str, showDLC = False):
     gameName = gameName.lower()

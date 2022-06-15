@@ -1,36 +1,42 @@
 from time import mktime, time
 from discord.ext import commands
 from discord import Embed, Color, Game
-from python.TextFunction import splitTextByLength
+from threading import Thread
 
+
+from python.TextFunction import splitTextByLength
 from python.globalVariables import *
 from python.VacLogging import *
 from python.BotDatabase import Database
-from python.SteamTracker import SteamTracker
+from python.SteamAPI_Service import SteamAPI_Service
 from python.Timer import *
 from python.Model.DiscordUser import DiscordUser
+from python.Model.Track import Track
 from python.SteamCountries import *
 from python.SteamGames import *
+from python.Tracker import Tracker
+
 setLogger()
 
 myDatabase = Database()
-steamTracker = SteamTracker(STEAM_API_KEY=STEAM_API_KEY)
+steamAPI_service = SteamAPI_Service()
+myTracker = Tracker()
 bot = commands.Bot(command_prefix='$')
 
 
 
 @bot.command()
 async def track(message, arg):
-    if not (steamTracker.checkSteamID(arg)):
+    if not (steamAPI_service.checkSteamID(arg)):
         await message.send("Error: SteamID is not valid")
         return
     
-    player = steamTracker.getPlayer(arg)
+    player = steamAPI_service.getPlayer(arg)
     if (player == None):
         await message.send("Error: SteamID is not in steam database, check steamid")
         return
     
-    playerBan = steamTracker.getPlayerBan(arg)
+    playerBan = steamAPI_service.getPlayerBan(arg)
     if (playerBan == None):
         await message.send("Error: SteamID is not in steam database, check steamid")
         return
@@ -44,8 +50,8 @@ async def track(message, arg):
         embedMessage.add_field(name="STATUS",value="I CANT SEE THIS PLAYER", inline=False)
         embedMessage.set_author(name=f"{player.getPersonaName()}", url=player.getProfileURL(), icon_url=player.getAvatar())
     elif player.getCommunityVisibilityState() == 3:
-        playerLevel = steamTracker.getSteamLevel(arg)
-        CSGO_total_played = steamTracker.getTotalTimePlayedCSGO(arg) 
+        playerLevel = steamAPI_service.getSteamLevel(arg)
+        CSGO_total_played = steamAPI_service.getTotalTimePlayedCSGO(arg) 
         embedMessage = Embed(color=Color.blue()) 
         embedMessage.set_author(name=f"{player.getPersonaName()} (Lvl {playerLevel})", url=player.getProfileURL(), icon_url=player.getAvatar())
         date, type = player.getYearsTimeCreated()
@@ -85,17 +91,21 @@ async def track(message, arg):
         embedMessage.add_field(name="Community Visibility", value="```diff\n-This player is private-```", inline=False)
         embedMessage.set_author(name=f"{player.getPersonaName()}", url=player.getProfileURL(), icon_url=player.getAvatar())
     
-    
-    
+    trackObj = Track(ownerDiscordID=message.author.id, steamID=player.getSteamID(), time=time(), channel_id=message.channel.id)
+    result = myDatabase.addTrack(trackObj)
+
     embedMessage.set_thumbnail(url=player.getAvatarFull())
     embedMessage.set_footer(text=f"I'm following the situation, I'll let you know if there is a change")
     await message.send(embed=embedMessage)
+    if (not result):
+        await message.send("Error: This account is already tracked, please use $untrack <STEAM_ID, Vanity_URL, STEAM2_ID> to untrack it")
+    
 
 @bot.command()
 async def game(message,arg):
     try:
         gameID = int(arg)
-        result = steamTracker.getGameWithID(gameID)
+        result = steamAPI_service.getGameWithID(gameID)
         if (len(result) > 2000):
             splitedText = splitTextByLength(result, 2000)
             for text in splitedText:
@@ -125,7 +135,25 @@ async def find_game(message,*args):
 @bot.command()
 async def config(message):
     if (message.author.id == ADMIN_DISCORD_ID):
-        await message.send(f"PRINT CONFIG")
+        await message.send(f"""TRACK_SLEEP_TIME: {myTracker.getTrackSleepTime()}
+TRACK_CHECK_TIME: {myTracker.getTrackCheckTime()}
+Change the values by using $setconfig <config_name> <value>""")
+    else:
+        await message.send("You are not authorized to use this command")
+
+@bot.command()
+async def setconfig(message,config_name,value):
+    if (message.author.id == ADMIN_DISCORD_ID):
+        if (config_name == "TRACK_SLEEP_TIME"):
+            myTracker.setTrackSleepTime(int(value))
+            await message.send(f"TRACK_SLEEP_TIME: {myTracker.getTrackSleepTime()}")
+        elif (config_name == "TRACK_CHECK_TIME"):
+            myTracker.setTrackCheckTime(int(value))
+            await message.send(f"Set Track Check Time to {myTracker.getTrackCheckTime()}")
+                
+    else:
+        await message.send("Error: You are not authorized to change the config")
+
 
 # @bot.event
 # async def on_command_error(message, error):
@@ -157,5 +185,8 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+
+tracker = Thread(target=myTracker.setTracker)
+tracker.start()
 
 bot.run(DISCORD_API_KEY)
