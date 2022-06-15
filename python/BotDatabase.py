@@ -1,9 +1,11 @@
 import sqlite3 as sql
 
+
 #Model
 from .Model.PlayerBan import PlayerBan
 from .Model.Player import Player
 from .Model.DiscordUser import DiscordUser
+from .Model.Game import Game
 
 CREATETABLE_PLAYER = """CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,6 +47,12 @@ CREATETABLE_DISCORDUSER = """CREATE TABLE IF NOT EXISTS discordusers (
     created_at REAL
     );"""
 
+CREATETABLE_GAME = """CREATE TABLE IF NOT EXISTS games (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    steam_appid INTEGER,
+    name TEXT
+    );"""
+
 class Database():
     dbName = "database.db"
     dbLoc = fr"db/{dbName}"
@@ -64,6 +72,7 @@ class Database():
         self.im.execute(CREATETABLE_PLAYER)
         self.im.execute(CREATETABLE_PLAYERBAN)
         self.im.execute(CREATETABLE_DISCORDUSER)
+        self.im.execute(CREATETABLE_GAME)
         self.db.commit()
         
         self.db.close()
@@ -168,3 +177,40 @@ class Database():
         id, discordID, name, avatar_url, joined_at, created_at = result
         myDiscordUser = DiscordUser(id, discordID, name, avatar_url, joined_at, created_at)
         return myDiscordUser
+
+    def addSteamGame(self, game :Game):
+        if (self.getGameWithID(game.getAppID()) != None):
+            print(f"Game {game.getAppID()} already exists")
+            return False
+        self.openDB()
+        KEY = f"steam_appid, name"
+        VALUES = f"""
+        '{game.getAppID()}',
+        '{game.getClearName()}'
+        """
+        self.im.execute(f"INSERT INTO games ({KEY}) VALUES ({VALUES})")
+        self.db.commit()
+        
+        self.db.close()
+        
+    def getGameWithID(self, appID:int) -> Game:
+        self.openDB()
+        self.im.execute(f"SELECT * FROM games WHERE steam_appid='{appID}'")
+        result = self.im.fetchone()
+        if result == None:
+            return None
+        id, steam_appid, name = result
+        myGame = Game(id, steam_appid, name)
+        return myGame
+    
+    def getGameWithName(self, name:str) -> list[Game]:
+        gameList = []
+        self.openDB()
+        # if contains results, add to list
+        self.im.execute(f"SELECT * FROM games WHERE name LIKE '%{name}%'")
+        all_result = self.im.fetchall()
+        for result in all_result:
+            id, steam_appid, name = result
+            myGame = Game(id, steam_appid, name)
+            gameList.append(myGame)
+        return gameList

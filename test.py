@@ -1,4 +1,5 @@
-from python.Database import Database
+from h11 import Data
+from python.BotDatabase import Database
 from python.SteamGames import getIDwithGameName
 from python.SteamTracker import SteamTracker
 from python.globalVariables import STEAM_API_KEY
@@ -132,3 +133,12 @@ from python.TextFunction import *
 # print("\n\n\n")
 # print(returnList[1])
 # print(len(returnList))
+
+
+
+
+from python.BotDatabase import Database
+
+myDb = Database()
+print(myDb.getGameWithName("Valley"))
+print(len(myDb.getGameWithName("Valley")))

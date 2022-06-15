@@ -1,2 +1,9 @@
 globalVariables.py
 *.pyc
+*.json
+downloadAllGamesSteam.py
+loadDatabaseFromJson.py
+test.py
+*.rar
+errorGames.txt 
+data

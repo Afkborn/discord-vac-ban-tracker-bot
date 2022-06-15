@@ -5,7 +5,7 @@ from python.TextFunction import splitTextByLength
 
 from python.globalVariables import *
 from python.VacLogging import *
-from python.Database import Database
+from python.BotDatabase import Database
 from python.SteamTracker import SteamTracker
 from python.Timer import *
 from python.Model.DiscordUser import DiscordUser
@@ -16,6 +16,8 @@ setLogger()
 myDatabase = Database()
 steamTracker = SteamTracker(STEAM_API_KEY=STEAM_API_KEY)
 bot = commands.Bot(command_prefix='$')
+
+
 
 @bot.command()
 async def track(message, arg):
@@ -39,6 +41,7 @@ async def track(message, arg):
     if player.getCommunityVisibilityState() == 2:
         embedMessage = Embed(color=Color.red())
         embedMessage.add_field(name="Community Visibility", value="```diff\n-This player is private-```", inline=False)
+        embedMessage.add_field(name="STATUS",value="I CANT SEE THIS PLAYER", inline=False)
         embedMessage.set_author(name=f"{player.getPersonaName()}", url=player.getProfileURL(), icon_url=player.getAvatar())
     elif player.getCommunityVisibilityState() == 3:
         playerLevel = steamTracker.getSteamLevel(arg)
@@ -81,7 +84,9 @@ async def track(message, arg):
         embedMessage = Embed(color=Color.red())
         embedMessage.add_field(name="Community Visibility", value="```diff\n-This player is private-```", inline=False)
         embedMessage.set_author(name=f"{player.getPersonaName()}", url=player.getProfileURL(), icon_url=player.getAvatar())
-        
+    
+    
+    
     embedMessage.set_thumbnail(url=player.getAvatarFull())
     embedMessage.set_footer(text=f"I'm following the situation, I'll let you know if there is a change")
     await message.send(embed=embedMessage)
@@ -91,19 +96,23 @@ async def game(message,arg):
     try:
         gameID = int(arg)
         result = steamTracker.getGameWithID(gameID)
-        await message.send(f"{result}")
+        if (len(result) > 2000):
+            splitedText = splitTextByLength(result, 2000)
+            for text in splitedText:
+                await message.send(text)
+        else:
+            await message.send(f"{result}") 
+        
     except:
         await message.send("Error: GameID is not valid")
 
 @bot.command()
 async def find_game(message,*args):
-    #TODO DLC LERİ LİSTELEMESİN
-    
     arg = " ".join(args)
-    resultList = getIDwithGameName(arg)
+    resultList = myDatabase.getGameWithName(arg)
     text = f"I found {len(resultList)} results for {arg}\n"
-    for index ,(id, appname) in enumerate(resultList,start=1):
-        text += f"{index}. {appname} (ID:{id})\n"
+    for index ,game in enumerate(resultList,start=1):
+        text += f"{index}. {game.getName()} (ID:{game.getAppID()})\n"
     text += "If you want to see more information about a game, use $game <gameID>"
     if (len(text) > 2000):
         splitedText = splitTextByLength(text,2000)

@@ -1,7 +1,5 @@
-from urllib import response
-from xmlrpc.client import Boolean
-from matplotlib.style import use
-from steamwebapi.api import ISteamUser, IPlayerService, ISteamUserStats
+
+from steamwebapi.api import ISteamUser
 
 from python.globalVariables import CSGO_APP_ID, STEAM_API_KEY
 
@@ -18,7 +16,7 @@ class SteamTracker:
     def __init__(self, STEAM_API_KEY:str) -> None:
         self.steamuserinfo = ISteamUser(steam_api_key=STEAM_API_KEY)
         
-    def checkSteamID(self,steamid:str) -> Boolean:
+    def checkSteamID(self,steamid:str) -> bool:
         if ("https" in steamid):
             if (steamid[-1] != "/"):
                 steamid +=  "/"
