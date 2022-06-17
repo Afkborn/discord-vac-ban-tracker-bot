@@ -44,6 +44,8 @@ class SteamAPI_Service:
         
     
     def getPlayer(self, steamid: str) -> Player:
+        if (type(steamid) == int):
+            steamid = str(steamid)
         steamid = self.checkSteamID(steamid)
         if (steamid == False):
             print("Error: SteamID is not valid")
@@ -53,7 +55,6 @@ class SteamAPI_Service:
         if len(playerinfo) == 0:
             return None
         elif len(playerinfo) == 1:
-
             playerinfo = playerinfo[0]
             steamID = playerinfo['steamid']
             communityvisibilitystate = playerinfo['communityvisibilitystate']
@@ -86,6 +87,7 @@ class SteamAPI_Service:
                 loccountrycode = playerinfo['loccountrycode']
             else:
                 loccountrycode = None
+                
             if 'locstatecode' in playerinfo:
                 locstatecode = playerinfo['locstatecode']
             else:
@@ -114,7 +116,30 @@ class SteamAPI_Service:
                 lastlogoff = playerinfo['lastlogoff']
             else:
                 lastlogoff = 0
-            myPlayer = Player(steamID=steamID,communityVisibilityState=communityvisibilitystate,profileState=profilestate,personaName=personaname,commentpermission=commentpermission,profileURL=profileurl,avatar=avatar,avatarMedium=avatarmedium,avatarFull=avatarfull,avatarHash=avatarhash,personaState=personastate,primaryClanID=primaryclanid,timeCreated=timecreated,personaStateFlags=personastateflags,createdTime=time(),loccountrycode=loccountrycode,locstatecode=locstatecode,loccityid=loccityid,realname=realname,gameid=gameid,gameserverip=gameserverip,gameextrainfo=gameextrainfo,lastlogoff=lastlogoff)
+            myPlayer = Player(steamID=steamID,
+                              communityVisibilityState=communityvisibilitystate,
+                              profileState=profilestate,
+                              personaName=personaname,
+                              commentpermission=commentpermission,
+                              profileURL=profileurl,
+                              avatar=avatar,
+                              avatarMedium=avatarmedium,
+                              avatarFull=avatarfull,
+                              avatarHash=avatarhash,
+                              personaState=personastate,
+                              primaryClanID=primaryclanid,
+                              timeCreated=timecreated,
+                              personaStateFlags=personastateflags,
+                              createdTime=time(),
+                              loccountrycode=loccountrycode,
+                              locstatecode=locstatecode,
+                              loccityid=loccityid,
+                              realname=realname,
+                              gameid=gameid,
+                              gameserverip=gameserverip,
+                              gameextrainfo=gameextrainfo,
+                              lastlogoff=lastlogoff
+                              )
             return myPlayer
         else:
             print(f"Error: Multiple users returned")
@@ -129,6 +154,7 @@ class SteamAPI_Service:
         if len(userban) == 0:
             return None
         elif len(userban) == 1:
+            #[{'SteamId': '76561198090921449', 'CommunityBanned': False, 'VACBanned': True, 'NumberOfVACBans': 1, 'DaysSinceLastBan': 1112, 'NumberOfGameBans': 0, 'EconomyBan': 'none'}]
             steamID, communityBanned, VACBanned, NumberOfVACBans, DaysSinceLastBan, NumberOfGameBans, EconomyBan = userban[0].values()
             myPlayerBan = PlayerBan(steamID=steamID, communityBanned=communityBanned, VACBanned=VACBanned, NumberOfVACBans=NumberOfVACBans, DaysSinceLastBan=DaysSinceLastBan, NumberOfGameBans=NumberOfGameBans, EconomyBan=EconomyBan,CreatedTime=time())
             return myPlayerBan

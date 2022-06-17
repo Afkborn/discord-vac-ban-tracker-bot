@@ -3,7 +3,7 @@ class PlayerBan():
     def __init__(self, 
         ID : int = None,
         steamID : str = None,
-        communityBanned : bool = None,
+        communityBanned : bool  = None,
         VACBanned : bool = None,
         NumberOfVACBans : int = None,
         DaysSinceLastBan : int = None,
@@ -12,20 +12,43 @@ class PlayerBan():
         CreatedTime : float = None,
         
         ) -> None:
-        self.__ID = ID
-        self.__steamID = steamID
-        self.__communityBanned = communityBanned
-        self.__VACBanned = VACBanned
-        self.__numberOfVACBans = NumberOfVACBans
-        self.__daysSinceLastBan = DaysSinceLastBan
-        self.__numberOfGameBans = NumberOfGameBans
+        if ID == None:
+            self.__ID = None
+        else:
+            self.__ID = int(ID)
         
-        if EconomyBan == "none":
+            
+        self.__steamID = int(steamID)
+        if (type(communityBanned) == str):
+            if communityBanned == "False" or communityBanned == "false":
+                self.__communityBanned = False
+            elif communityBanned == "True" or communityBanned == "true":
+                self.__communityBanned = True
+        elif type(communityBanned) == bool:
+            self.__communityBanned = communityBanned
+        else:
+            print(f"Type error, communityBanned is {type(communityBanned)}, {communityBanned}")
+            
+        if type(VACBanned) == str:
+            if VACBanned == "False" or VACBanned == "false":
+                self.__VACBanned = False
+            elif VACBanned == "True" or VACBanned == "true":
+                self.__VACBanned = True
+        elif type(VACBanned == bool):
+            self.__VACBanned = VACBanned
+        else:
+            print(f"Type error, VACBanned is {type(VACBanned)}, {VACBanned}")
+        
+        self.__numberOfVACBans = int(NumberOfVACBans)
+        self.__daysSinceLastBan = int(DaysSinceLastBan)
+        self.__numberOfGameBans = int(NumberOfGameBans)
+        
+        if EconomyBan == "none" or EconomyBan == "None":
             self.__economyBan = None
         else:
             self.__economyBan = EconomyBan
             
-        self.__createdTime = CreatedTime
+        self.__createdTime = float(CreatedTime)
     
     def getID(self) -> int:
         return self.__ID

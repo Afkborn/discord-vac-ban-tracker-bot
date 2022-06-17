@@ -9,6 +9,11 @@ from .Model.DiscordUser import DiscordUser
 from .Model.Game import Game
 from .Model.Track import Track
 
+        # self.__lastlogoff = lastlogoff int 
+        # self.__realName = realname str
+        # self.__locCountryCode = loccountrycode str
+        # self.__locStateCode = locstatecode str
+        # self.__locCityID =  loccityid int
 
 CREATETABLE_PLAYER = """CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,8 +31,14 @@ CREATETABLE_PLAYER = """CREATE TABLE IF NOT EXISTS players (
     primaryclanid TEXT,
     timecreated INTEGER,
     personastateflags INTEGER,
-    createdTime REAL
+    createdTime REAL,
+    lastlogoff INTEGER,
+    realname TEXT,
+    loccountrycode TEXT,
+    locstatecode TEXT,
+    loccityid INTEGER
     );"""
+    
     
 CREATETABLE_PLAYERBAN = """CREATE TABLE IF NOT EXISTS playerbans (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,12 +103,13 @@ class Database():
     def addPlayer(self, player:Player):
         
         if (self.getPlayerWithSteamID(player.getSteamID()) != None):
-            
+            print("This player already exists, not adding, updating instead")
+            self.updatePlayer(player)
             return False
         
         self.openDB()
         
-        KEY = f"steamid,communityvisibilitystate,profilestate,personaname,profileurl,avatar,avatarmedium,avatarfull,avatarhash,commentpermission,personastate,primaryclanid,timecreated,personastateflags,createdTime"
+        KEY = f"steamid,communityvisibilitystate,profilestate,personaname,profileurl,avatar,avatarmedium,avatarfull,avatarhash,commentpermission,personastate,primaryclanid,timecreated,personastateflags,createdTime,lastlogoff,realname,loccountrycode,locstatecode,loccityid"
         VALUES = f"""
         '{player.getSteamID()}',
         '{player.getCommunityVisibilityState()}',
@@ -113,7 +125,12 @@ class Database():
         '{player.getPrimaryClanID()}',
         '{player.getTimeCreated()}',
         '{player.getPersonaStateFlags()}',
-        '{player.getCreatedTime()}'
+        '{player.getCreatedTime()}',
+        '{player.getLastLogoff()}',
+        '{player.getRealName()}',
+        '{player.getLocCountryCode()}',
+        '{player.getLocStateCode()}',
+        '{player.getLocCityID()}'
         """
         self.im.execute(f"INSERT INTO players ({KEY}) VALUES ({VALUES})")
         self.db.commit()
@@ -126,8 +143,29 @@ class Database():
         result = self.im.fetchone()
         if result == None:
             return None
-        id, steamid, communityvisibilitystate, profilestate, personaname, profileurl, avatar, avatarmedium, avatarfull, avatarhash, commentpermission, personastate, primaryclanid, timecreated, personastateflags, createdTime = result
-        myPlayer = Player(id,steamid,communityvisibilitystate,profilestate,personaname,profileurl,avatar,avatarmedium,avatarfull,avatarhash,commentpermission,personastate,primaryclanid,timecreated,personastateflags,createdTime)
+        id, steamid, communityvisibilitystate, profilestate, personaname, profileurl, avatar, avatarmedium, avatarfull, avatarhash, commentpermission, personastate, primaryclanid, timecreated, personastateflags, createdTime, lastlogoff, realname, loccountrycode, locstatecode, loccityid = result
+        myPlayer = Player(ID=id,
+                          steamID=steamid,
+                          communityVisibilityState=communityvisibilitystate,
+                          profileState=profilestate,
+                          personaName=personaname,
+                          commentpermission=commentpermission,
+                          profileURL=profileurl,
+                          avatar=avatar,
+                          avatarMedium=avatarmedium,
+                          avatarFull=avatarfull,
+                          avatarHash=avatarhash,
+                          personaState=personastate,
+                          primaryClanID=primaryclanid,
+                          timeCreated=timecreated,
+                          personaStateFlags=personastateflags,
+                          createdTime=createdTime,
+                          lastlogoff=lastlogoff,
+                          realname=realname,
+                          loccountrycode=loccountrycode,
+                          locstatecode=locstatecode,
+                          loccityid=loccityid)
+                          
         return myPlayer
     
     def addPlayerBan(self,playerBan : PlayerBan):
@@ -151,13 +189,20 @@ class Database():
         
     def getLastPlayerBan(self, steamID:str) -> PlayerBan:
         self.openDB()
-        
         self.im.execute(f"SELECT * FROM playerbans WHERE steamid='{steamID}' ORDER BY createdtime DESC LIMIT 1")
         result = self.im.fetchone()
         if result == None:
             return None
         id, steamid, communitybanned, VACbanned, numberofVACBans, daysSinceLastBan, numberofGameBans, economyban, createdtime = result
-        myPlayerBan = PlayerBan(id,steamid,communitybanned,VACbanned,numberofVACBans,daysSinceLastBan,numberofGameBans,economyban,createdtime)
+        myPlayerBan = PlayerBan(ID=id,
+                                steamID=steamid,
+                                communityBanned=communitybanned,
+                                VACBanned=VACbanned,
+                                NumberOfVACBans=numberofVACBans,
+                                DaysSinceLastBan=daysSinceLastBan,
+                                NumberOfGameBans=numberofGameBans,
+                                EconomyBan=economyban,
+                                CreatedTime=createdtime)
         return myPlayerBan
 
     def addDiscordUser(self, discordUser:DiscordUser) :
@@ -267,4 +312,76 @@ class Database():
             myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
             trackList.append(myTracker)
         return trackList
+    
+    def updatePlayer(self, player:Player):
+        self.openDB()
+        self.im.execute(f"""UPDATE players SET 
+                        communityvisibilitystate={player.getCommunityVisibilityState()},
+                        profilestate={player.getProfileState()},
+                        personaname='{player.getPersonaName()}',
+                        profileurl='{player.getProfileURL()}',
+                        avatar='{player.getAvatar()}',
+                        avatarmedium='{player.getAvatarMedium()}',
+                        avatarfull='{player.getAvatarFull()}',
+                        avatarHash='{player.getAvatarHash()}',
+                        commentpermission={player.getCommentPermission()},
+                        personastate={player.getPersonaState()},
+                        primaryclanid='{player.getPrimaryClanID()}',
+                        timecreated={player.getTimeCreated()},
+                        personastateflags={player.getPersonaStateFlags()},
+                        createdTime={player.getCreatedTime()},
+                        lastlogoff={player.getLastlogoff()},
+                        realname='{player.getRealName()}',
+                        loccountrycode='{player.getLocCountryCode()}',
+                        locstatecode='{player.getLocStateCode()}',
+                        loccityid={player.getLocCityID()}
+                        WHERE steamid='{player.getSteamID()}'""")
+        self.db.commit()
+        self.db.close()
+        
+    def getAllSteamPlayers(self) -> list[Player]:
+        self.openDB()
+        playerList = []
+        self.im.execute(f"SELECT * FROM players")
+        results = self.im.fetchall()
+        self.db.close()
+        if results == None:
+            return None
+        for result in results:
+            id, steamid, communityvisibilitystate, profilestate, personaname, profileurl, avatar, avatarmedium, avatarfull, avatarhash, commentpermission, personastate, primaryclanid, timecreated, personastateflags, createdTime, lastlogoff, realname, loccountrycode, locstatecode, loccityid = result
+            myPlayer = Player(ID=id,
+                          steamID=steamid,
+                          communityVisibilityState=communityvisibilitystate,
+                          profileState=profilestate,
+                          personaName=personaname,
+                          commentpermission=commentpermission,
+                          profileURL=profileurl,
+                          avatar=avatar,
+                          avatarMedium=avatarmedium,
+                          avatarFull=avatarfull,
+                          avatarHash=avatarhash,
+                          personaState=personastate,
+                          primaryClanID=primaryclanid,
+                          timeCreated=timecreated,
+                          personaStateFlags=personastateflags,
+                          createdTime=createdTime,
+                          lastlogoff=lastlogoff,
+                          realname=realname,
+                          loccountrycode=loccountrycode,
+                          locstatecode=locstatecode,
+                          loccityid=loccityid)
+            playerList.append(myPlayer)
+        return playerList
+    
+    def getAllSteamIDs(self) -> list[str]:
+        self.openDB()
+        steamIDList = []
+        self.im.execute(f"SELECT steamid FROM players")
+        results = self.im.fetchall()
+        self.db.close()
+        if results == None:
+            return None
+        for result in results:
+            steamIDList.append(int(result[0]))
+        return steamIDList
         

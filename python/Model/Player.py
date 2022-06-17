@@ -40,40 +40,50 @@ class Player():
         gameextrainfo : str = None,
         gameserverip : str = None,
         ) -> None:
-        self.__ID = ID
-        self.__steamID = steamID
-        self.__communityVisibilityState = communityVisibilityState
-        self.__profileState = profileState
-        self.__personaName = personaName
-        self.__profileURL = profileURL
-        self.__avatar = avatar
-        self.__avatarMedium = avatarMedium
-        self.__avatarFull = avatarFull
-        self.__avatarHash = avatarHash
-        self.__commentPermission = commentpermission
-        self.__personaState = personaState
-        self.__primaryClanID = primaryClanID
-        self.__timeCreated = timeCreated
-        self.__personaStateFlags = personaStateFlags
-        self.__createdTime = createdTime
-        self.__lastlogoff = lastlogoff
+        if (ID == None):
+            self.__ID = None
+        else:
+            self.__ID =int(ID) 
+        self.__steamID = int(steamID)
+        self.__communityVisibilityState = int(communityVisibilityState)
+        self.__profileState = int(profileState)
+        self.__personaName = str(personaName)
+        self.__profileURL = str(profileURL)
+        self.__avatar = str(avatar)
+        self.__avatarMedium = str(avatarMedium)
+        self.__avatarFull = str(avatarFull)
+        self.__avatarHash = str(avatarHash)
+        self.__commentPermission = int(commentpermission)
+        self.__personaState = int(personaState)
+        self.__primaryClanID = int(primaryClanID)
+        self.__timeCreated = int(timeCreated)
+        self.__personaStateFlags = int(personaStateFlags)
+        self.__createdTime = float(createdTime)
         
-        #private
+        
+        #private variables
+        self.__lastlogoff = lastlogoff
+        self.__realName = realname
         self.__locCountryCode = loccountrycode
         self.__locStateCode = locstatecode
         self.__locCityID =  loccityid
-        self.__realName = realname
+        
+        #not in db
         self.__gameid = gameid
         self.__gameextrainfo = gameextrainfo
         self.__gameserverip = gameserverip
         
     def getID(self) -> int:
+        if (self.__ID == None):
+            return 0
         return self.__ID
     def getSteamID(self) -> str:
         return self.__steamID
     def getCommunityVisibilityState(self) -> int:
         return self.__communityVisibilityState
     def getProfileState(self) -> int:
+        if (self.__profileState == None):
+            return 0
         return self.__profileState
     def getPersonaName(self) -> str:
         return self.__personaName
@@ -88,24 +98,36 @@ class Player():
     def getAvatarHash(self) -> str:
         return self.__avatarHash
     def getCommentPermission(self) -> int:
+        if (self.__commentPermission == None):
+            return 0
         return self.__commentPermission
     def getPersonaState(self) -> int:
+        if (self.__personaState == None):
+            return 0
         return self.__personaState
     def getPrimaryClanID(self) -> str:
         return self.__primaryClanID
     def getTimeCreated(self) -> int:
+        if (self.__timeCreated == None):
+            return 0
         return self.__timeCreated
     def getPersonaStateFlags(self) -> int:
+        if (self.__personaStateFlags == None):
+            return 0
         return self.__personaStateFlags
     def getCreatedTime(self) -> float:
         return self.__createdTime
     def getLastlogoff(self) -> int:
+        if (self.__lastlogoff == None):
+            return 0
         return self.__lastlogoff
     def getLocCountryCode(self) -> str:
         return self.__locCountryCode
     def getLocStateCode(self) -> str:
         return self.__locStateCode
     def getLocCityID(self) -> int:
+        if (self.__locCityID == None):
+            return 0
         return self.__locCityID
     def getRealName(self) -> str:
         return self.__realName
