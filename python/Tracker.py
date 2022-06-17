@@ -1,4 +1,5 @@
 from time import sleep, time
+from xmlrpc.client import Boolean
 
 from python.Model.PlayerBan import PlayerBan
 from python.globalVariables import DISCORD_API_KEY
@@ -28,7 +29,7 @@ class Tracker:
     def setTracker(self):
         while True:
             for track in self.getTrackableObject():
-                #check ban status, if banned message to owner
+                
                 steamPlayer = self.db.getPlayerWithSteamID(track.getSteamID())
                 discordUser = self.db.getDiscordUserWithDiscordID(track.getOwnerDiscordID())
                 last_steam_ban_status = self.db.getLastPlayerBan(track.getSteamID())
@@ -76,10 +77,14 @@ class Tracker:
             return True
         return False
         
-    def sendMessageViaHTPP(self,message, channel_id):
+    def sendMessageViaHTPP(self,message, channel_id) -> Boolean:
         baseURL = f"https://discordapp.com/api/channels/{channel_id}/messages"
         headers = { "Authorization":"Bot {}".format(DISCORD_API_KEY),
                     "User-Agent":"myBotThing (http://some.url, v0.1)",
                     "Content-Type":"application/json", }
         POSTedJSON =  json.dumps ( {"content":message} )
         r = requests.post(baseURL, headers = headers, data = POSTedJSON)
+        if r.status_code == 200:
+            return True
+        else:
+            return False

@@ -97,7 +97,7 @@ async def track(message, arg):
     embedMessage.set_thumbnail(url=player.getAvatarFull())
     embedMessage.set_footer(text=f"I'm following the situation, I'll let you know if there is a change")
     await message.send(embed=embedMessage)
-    if (not result):
+    if (result == False):
         await message.send("Error: This account is already tracked, please use $untrack <STEAM_ID, Vanity_URL, STEAM2_ID> to untrack it")
     
 

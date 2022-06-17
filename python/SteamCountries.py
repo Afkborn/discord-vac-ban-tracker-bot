@@ -16,7 +16,7 @@ def getCountryDetail(countryCode: str = None, locstatecode : str = None, loccity
         return countryName, None, None
     countryState = data[countryCode]['states'][locstatecode]
     countryStateName = countryState['name']
-    if loccityid == 'None':
+    if loccityid == 'None' or loccityid == "0":
         return countryName, countryStateName, None
     countryStateCities = countryState['cities']
     countryStateCitiesName = countryStateCities[loccityid]['name']

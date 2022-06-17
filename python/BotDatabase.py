@@ -126,7 +126,7 @@ class Database():
         '{player.getTimeCreated()}',
         '{player.getPersonaStateFlags()}',
         '{player.getCreatedTime()}',
-        '{player.getLastLogoff()}',
+        '{player.getLastlogoff()}',
         '{player.getRealName()}',
         '{player.getLocCountryCode()}',
         '{player.getLocStateCode()}',
@@ -294,7 +294,6 @@ class Database():
         self.db.close()
         if result == None:
             return None
-        
         id, ownerDiscordID, steamID, time, channelID = result
         myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
         return myTracker
