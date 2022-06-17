@@ -33,4 +33,8 @@ class Track:
         self.__time = time
     def setChannelID(self, channel_id : int) -> None:
         self.__channelID = channel_id
+    
+    def getURL(self) -> str:
+        #https://steamcommunity.com/profiles/ID/
+        return f"https://steamcommunity.com/profiles/{self.getSteamID()}"
         

@@ -1,10 +1,11 @@
-globalVariables.py
 *.pyc
+*.rar
+*.log
 *.json
+globalVariables.py
 downloadAllGamesSteam.py
 loadDatabaseFromJson.py
 test.py
-*.rar
 errorGames.txt 
 data
 steam game detail

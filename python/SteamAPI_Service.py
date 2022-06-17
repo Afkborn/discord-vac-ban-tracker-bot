@@ -48,7 +48,7 @@ class SteamAPI_Service:
             steamid = str(steamid)
         steamid = self.checkSteamID(steamid)
         if (steamid == False):
-            print("Error: SteamID is not valid")
+            print(" Error: SteamID is not valid")
             return None
         
         playerinfo = self.steamuserinfo.get_player_summaries(steamIDS=steamid)['response']['players']
@@ -142,13 +142,13 @@ class SteamAPI_Service:
                               )
             return myPlayer
         else:
-            print(f"Error: Multiple users returned")
+            print(f" Error: Multiple users returned")
             return None
     
     def getPlayerBan(self, steamid: str) -> PlayerBan:
         steamid = self.checkSteamID(steamid)
         if (steamid == False):
-            print("Error: SteamID is not valid")
+            print(" Error: SteamID is not valid")
             return None
         userban = self.steamuserinfo.get_player_bans(steamIDS=steamid)['players']
         if len(userban) == 0:
@@ -159,31 +159,31 @@ class SteamAPI_Service:
             myPlayerBan = PlayerBan(steamID=steamID, communityBanned=communityBanned, VACBanned=VACBanned, NumberOfVACBans=NumberOfVACBans, DaysSinceLastBan=DaysSinceLastBan, NumberOfGameBans=NumberOfGameBans, EconomyBan=EconomyBan,CreatedTime=time())
             return myPlayerBan
         else:
-            print("Error: Multiple users returned")
+            print(" Error: Multiple users returned")
             return None
         
     def getSteamLevel(self,steamid: str) -> int:
         steamid = self.checkSteamID(steamid)
         if (steamid == False):
-            print("Error: SteamID is not valid")
+            print(" Error: SteamID is not valid")
             return None
         try:
             response = requests.get(f"https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key={STEAM_API_KEY}&steamid={steamid}")
             return response.json()['response']['player_level']
         except:
-            print("Error: Steam Level")
+            print(" Error: Steam Level")
             return 0
         
     def getTotalTimePlayedCSGO(self, steamid:str) -> int:
         steamid = self.checkSteamID(steamid)
         if (steamid == False):
-            print("Error: SteamID is not valid")
+            print(" Error: SteamID is not valid")
             return None
         try:
             response = requests.get(f"https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v2/?appid={CSGO_APP_ID}&key={STEAM_API_KEY}&steamid={steamid}")
             return response.json()['playerstats']['stats'][2]['value']
         except:
-            print("Error: TotalTimePlayedCSGO")
+            print(" Error: TotalTimePlayedCSGO")
             return None
         
     def getSteamIDFromVanityURL(self, vanityURL:str):
@@ -191,7 +191,7 @@ class SteamAPI_Service:
             response = requests.get(f"https://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={STEAM_API_KEY}&vanityurl={vanityURL}")
             return response.json()['response']['steamid']
         except:
-            print("Error: SteamIDFromVanitryURL")
+            print(" Error: SteamIDFromVanitryURL")
             return 0
         
     def steamid_to_64bit(self,steamid):
@@ -209,7 +209,7 @@ class SteamAPI_Service:
             data = response.json()[str(gameID)]["data"]
             return data
         except:
-            print(F"Error: Game with ID {gameID} not found")
+            print(f" Error: Game with ID {gameID} not found")
     
     def isDLC(self,gameID: int):
         response = requests.get(f"https://store.steampowered.com/api/appdetails?appids={gameID}")

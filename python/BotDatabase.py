@@ -1,5 +1,6 @@
 from multiprocessing.sharedctypes import Value
 import sqlite3 as sql
+from sys import int_info
 
 
 #Model
@@ -103,7 +104,7 @@ class Database():
     def addPlayer(self, player:Player):
         
         if (self.getPlayerWithSteamID(player.getSteamID()) != None):
-            print("This player already exists, not adding, updating instead")
+            print(" This player already exists, not adding, updating instead")
             self.updatePlayer(player)
             return False
         
@@ -237,7 +238,7 @@ class Database():
 
     def addSteamGame(self, game :Game):
         if (self.getGameWithID(game.getAppID()) != None):
-            print(f"Game {game.getAppID()} already exists")
+            print(f" Game {game.getAppID()} already exists")
             return False
         self.openDB()
         KEY = f"steam_appid, name"
@@ -298,10 +299,41 @@ class Database():
         myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
         return myTracker
     
+    def deleteTrack(self,steamID:int, ownerDiscordID:int):
+        self.openDB()
+        self.im.execute(f"DELETE FROM tracks WHERE steamID={steamID} AND ownerDiscordID={ownerDiscordID}")
+        self.db.commit()
+        self.db.close()
+    
+    def getTrackWithSteamID_DiscordID(self, steamID:int, ownerDiscordID : int) -> Track:
+        self.openDB()
+        self.im.execute(f"SELECT * FROM tracks WHERE ownerDiscordID={ownerDiscordID} AND steamID={steamID}")
+        result = self.im.fetchone()
+        self.db.close()
+        if result == None:
+            return None
+        id, ownerDiscordID, steamID, time, channelID = result
+        myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
+        return myTracker
+    
     def getAllTrack(self) -> list[Track]:
         self.openDB()
         trackList = []
         self.im.execute(f"SELECT * FROM tracks")
+        results = self.im.fetchall()
+        self.db.close()
+        if results == None:
+            return None
+        for result in results:
+            id ,ownerDiscordID, steamID, time, channelID = result
+            myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
+            trackList.append(myTracker)
+        return trackList
+    
+    def getAllTrackWithDiscordID(self, discordID:int) -> list[Track]:
+        self.openDB()
+        trackList = []
+        self.im.execute(f"SELECT * FROM tracks WHERE ownerDiscordID={discordID}")
         results = self.im.fetchall()
         self.db.close()
         if results == None:

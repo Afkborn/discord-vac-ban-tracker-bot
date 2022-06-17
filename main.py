@@ -102,6 +102,33 @@ async def track(message, arg):
     
 
 @bot.command()
+async def untrack(message, arg):
+    steam_ID = steamAPI_service.checkSteamID(arg)
+    if not (steam_ID):
+        await message.send("Error: SteamID is not valid")
+        return
+    discordID = message.author.id
+    tracker = myDatabase.getTrackWithSteamID_DiscordID(steamID=steam_ID,ownerDiscordID=discordID)
+    if tracker == None:
+        await message.send("Error: You are not tracking this account")
+    else:
+        myDatabase.deleteTrack(steamID=steam_ID,ownerDiscordID=discordID)
+        await message.send("Untracking...")
+    
+@bot.command()
+async def mytrackers(message):
+    discordID = message.author.id
+    trackers = myDatabase.getAllTrackWithDiscordID(discordID)
+    if (len(trackers) == 0):
+        await message.send("You are not tracking any account")
+        return 0
+    await message.send(f"You are tracking {len(trackers)} accounts")
+    text = f"This is your list of tracked accounts:\n"
+    for tracker in trackers:
+        text += f"{tracker.getURL()}\n"
+    await message.send(text)
+
+@bot.command()
 async def game(message,arg):
     try:
         gameID = int(arg)

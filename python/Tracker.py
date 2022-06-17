@@ -8,6 +8,7 @@ from .SteamAPI_Service import SteamAPI_Service
 from .Model.Track import Track
 import json
 import requests
+from .Timer import *
 
 class Tracker:
     TRACK_SLEEP_TIME = 60
@@ -29,23 +30,27 @@ class Tracker:
     def setTracker(self):
         while True:
             for track in self.getTrackableObject():
-                
                 steamPlayer = self.db.getPlayerWithSteamID(track.getSteamID())
                 discordUser = self.db.getDiscordUserWithDiscordID(track.getOwnerDiscordID())
                 last_steam_ban_status = self.db.getLastPlayerBan(track.getSteamID())
                 new_ban_status = self.steamAPI.getPlayerBan(str(track.getSteamID()))
+                print(f" {get_time_command()} | Checking {steamPlayer.getPersonaName()} for {discordUser.getName()}")
                 if (self.compareVacBan(last_steam_ban_status, new_ban_status)):
                     message = f"{discordUser.getName()} i have new message for you, {steamPlayer.getPersonaName()} is now vac banned. {type(last_steam_ban_status.getVACBanned())} {type(new_ban_status.getVACBanned())}"
                     self.sendMessageViaHTPP(message, track.getChannelID())
+                    self.db.addPlayerBan(new_ban_status)
                 if (self.compareEconomyBan(last_steam_ban_status, new_ban_status)):
                     message = f"{discordUser.getName()} i have new message for you, {steamPlayer.getPersonaName()} is now economy banned. {type(last_steam_ban_status.getEconomyBan())} {type(new_ban_status.getEconomyBan())}"
                     self.sendMessageViaHTPP(message, track.getChannelID())
+                    self.db.addPlayerBan(new_ban_status)
                 if (self.compareNumberOfGameBan(last_steam_ban_status, new_ban_status)):
                     message = f"{discordUser.getName()} i have new message for you, {steamPlayer.getPersonaName()} is now game banned. {type(last_steam_ban_status.getNumberOfGameBans())} {type(new_ban_status.getNumberOfGameBans())}"
                     self.sendMessageViaHTPP(message, track.getChannelID())
+                    self.db.addPlayerBan(new_ban_status)
                 if (self.compareCommunityBan(last_steam_ban_status, new_ban_status)):
                     message = f"{discordUser.getName()} i have new message for you, {steamPlayer.getPersonaName()} is now community banned. {type(last_steam_ban_status.getcommunityBanned())} {type(new_ban_status.getcommunityBanned())}"
                     self.sendMessageViaHTPP(message, track.getChannelID())
+                    self.db.addPlayerBan(new_ban_status)
             sleep(self.TRACK_SLEEP_TIME)
     
     
