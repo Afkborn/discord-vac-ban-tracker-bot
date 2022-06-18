@@ -42,22 +42,34 @@ from python.TextFunction import *
 
 
 
-from python.BotDatabase import Database
+# from python.BotDatabase import Database
 
-# myDb = Database()
-# print(myDb.getGameWithName("Valley"))
-# print(len(myDb.getGameWithName("Valley")))
+# # myDb = Database()
+# # print(myDb.getGameWithName("Valley"))
+# # print(len(myDb.getGameWithName("Valley")))
 
-known_code_list = []
-from python.globalVariables import *
+# known_code_list = []
+# from python.globalVariables import *
+# api_service = SteamAPI_Service()
+# result = None
+# known_code = "CSGO-RRkXO-R8fEb-yjKXP-q6vUp-u2dOQ"
+# known_code_list.append(known_code)
+# while result != "n/a":
+#     result = api_service.getCSGO_AccessMatchHistory(steamid="76561199089429877",steamid_key=AUTH_CODE,known_code=known_code)
+#     print(result)
+#     if result != "n/a":
+#         known_code_list.append(result)
+#     known_code = result
+# print(known_code_list)
+
+
+
+
+
+
+
+
 api_service = SteamAPI_Service()
-result = None
-known_code = "CSGO-RRkXO-R8fEb-yjKXP-q6vUp-u2dOQ"
-known_code_list.append(known_code)
-while result != "n/a":
-    result = api_service.getCSGO_AccessMatchHistory(steamid="76561199089429877",steamid_key=AUTH_CODE,known_code=known_code)
-    print(result)
-    if result != "n/a":
-        known_code_list.append(result)
-    known_code = result
-print(known_code_list)
+friends_list = api_service.getFriends("76561199089429877")
+print(friends_list)
+print(len(friends_list))

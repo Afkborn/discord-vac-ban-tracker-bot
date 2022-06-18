@@ -6,6 +6,7 @@ from python.globalVariables import CSGO_APP_ID, STEAM_API_KEY
 #Model
 from .Model.PlayerBan import PlayerBan
 from .Model.Player import Player
+from .Model.Friend import Friend
 #time
 from time import time
 
@@ -55,7 +56,7 @@ class SteamAPI_Service:
         if len(playerinfo) == 0:
             return None
         elif len(playerinfo) == 1:
-            print(playerinfo[0])
+            
             playerinfo = playerinfo[0]
             steamID = playerinfo['steamid']
             communityvisibilitystate = playerinfo['communityvisibilitystate']
@@ -235,3 +236,22 @@ class SteamAPI_Service:
         except:
             print(f" Error: GetCSGO_AccessMatchHistory")
         
+    def getFriends(self, steamid: str):
+        steamid = self.checkSteamID(steamid)
+        if (steamid == False):
+            print(" Error: SteamID is not valid")
+            return None
+        try:
+            response = requests.get(f"https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key={STEAM_API_KEY}&steamid={steamid}&relationship=friend")
+            data = response.json()['friendslist']['friends']
+            friendList = []
+            for friend in data:
+                friendSteamId=friend['steamid']
+                relationship = friend['relationship']
+                friendSince = friend['friend_since']
+                myFriend = Friend(ownerSteamID=steamid, friendSteamID=friendSteamId, relationship=relationship, friendSince=friendSince)
+                friendList.append(myFriend)
+            return friendList 
+        except:
+            print(" Error: GetFriends")
+            return None
