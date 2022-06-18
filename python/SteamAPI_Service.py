@@ -55,6 +55,7 @@ class SteamAPI_Service:
         if len(playerinfo) == 0:
             return None
         elif len(playerinfo) == 1:
+            print(playerinfo[0])
             playerinfo = playerinfo[0]
             steamID = playerinfo['steamid']
             communityvisibilitystate = playerinfo['communityvisibilitystate']
@@ -223,4 +224,14 @@ class SteamAPI_Service:
         else:
             print(data)
             return False
-
+        
+    def getCSGO_AccessMatchHistory(self, steamid: str, steamid_key : str, known_code : str):
+        try:
+            url = f"https://api.steampowered.com/ICSGOPlayers_730/GetNextMatchSharingCode/v1?key={STEAM_API_KEY}&steamid={steamid}&steamidkey={steamid_key}&knowncode={known_code}"
+            
+            response = requests.get(url)
+            nextCode = response.json()['result']['nextcode']
+            return nextCode
+        except:
+            print(f" Error: GetCSGO_AccessMatchHistory")
+        

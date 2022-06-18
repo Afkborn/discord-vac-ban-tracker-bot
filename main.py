@@ -164,8 +164,20 @@ async def find_game(message,*args):
     
 
 @bot.command()
-async def track_match(message,arg):
-    pass
+async def track_match(message,*args):
+    arg = " ".join(args)
+    lines = arg.split('#')
+    idList= []
+    for line in lines:
+        if (len(line) == 0):
+            continue
+        lineArg = line.split(" ")
+        for arg in lineArg:
+            if (arg.startswith("STEAM")):
+                idList.append(arg)
+    for id in idList:
+        await track(message,id)
+                
 
 @bot.command()
 async def config(message):

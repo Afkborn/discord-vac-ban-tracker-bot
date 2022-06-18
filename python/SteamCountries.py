@@ -9,7 +9,7 @@ def getCountryDetail(countryCode: str = None, locstatecode : str = None, loccity
     loccityid = str(loccityid)
     f = open(STEAM_COUNTRIES_LOC)
     data = json.load(f)
-    if countryCode == None:
+    if countryCode == None or not countryCode in data:
         return None, None, None
     countryName = data[countryCode]['name']
     if locstatecode == None:
@@ -21,4 +21,5 @@ def getCountryDetail(countryCode: str = None, locstatecode : str = None, loccity
     countryStateCities = countryState['cities']
     countryStateCitiesName = countryStateCities[loccityid]['name']
     return (countryName, countryStateName, countryStateCitiesName)
+
     
