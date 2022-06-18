@@ -125,8 +125,12 @@ async def mytrackers(message):
     await message.send(f"You are tracking {len(trackers)} accounts")
     text = f"This is your list of tracked accounts:\n"
     for tracker in trackers:
-        text += f"{tracker.getURL()}\n"
-    await message.send(text)
+        steamPlayer = myDatabase.getPlayerWithSteamID(tracker.getSteamID())
+        text += f"[{steamPlayer.getPersonaName()}]({steamPlayer.getProfileURL()})\n" #[Link text](http://example.com)
+    
+    embed = Embed()
+    embed.description = text
+    await message.send(embed=embed)
 
 @bot.command()
 async def game(message,arg):
@@ -158,6 +162,10 @@ async def find_game(message,*args):
     else:
         await message.send(text)
     
+
+@bot.command()
+async def track_match(message,arg):
+    pass
 
 @bot.command()
 async def config(message):

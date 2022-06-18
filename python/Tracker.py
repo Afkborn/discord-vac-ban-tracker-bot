@@ -39,6 +39,9 @@ class Tracker:
                     message = f"{discordUser.getName()} i have new message for you, {steamPlayer.getPersonaName()} is now vac banned. {type(last_steam_ban_status.getVACBanned())} {type(new_ban_status.getVACBanned())}"
                     self.sendMessageViaHTPP(message, track.getChannelID())
                     self.db.addPlayerBan(new_ban_status)
+                    track.setIsBanned(True)
+                    track.setBannedTime(time())
+                    self.db.updateTrack(track=track)
                 if (self.compareEconomyBan(last_steam_ban_status, new_ban_status)):
                     message = f"{discordUser.getName()} i have new message for you, {steamPlayer.getPersonaName()} is now economy banned. {type(last_steam_ban_status.getEconomyBan())} {type(new_ban_status.getEconomyBan())}"
                     self.sendMessageViaHTPP(message, track.getChannelID())

@@ -102,10 +102,12 @@ class SteamAPI_Service:
                 realname = None
             if 'gameid' in playerinfo:
                 gameid = playerinfo['gameid']
+                print(f"gameid: {gameid}")
             else:
                 gameid = None
             if 'gameserverip' in playerinfo:
                 gameserverip = playerinfo['gameserverip']
+                print(f"gameserverip: {gameserverip}")
             else:
                 gameserverip = None
             if 'gameextrainfo' in playerinfo:

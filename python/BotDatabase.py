@@ -73,7 +73,9 @@ CREATETABLE_TRACK = """CREATE TABLE IF NOT EXISTS tracks (
     ownerDiscordID INTEGER,
     steamID INTEGER,
     time REAL,
-    channelID INTEGER
+    channelID INTEGER,
+    isBanned BOOL,
+    bannedTime REAL
     );"""
 
 class Database():
@@ -277,12 +279,14 @@ class Database():
         if (self.getTrackWithTrack(track) != None):
             return False        
         self.openDB()
-        KEY = f"ownerDiscordID, steamID, time,channelID"
+        KEY = f"ownerDiscordID, steamID, time,channelID, isBanned, bannedTime"
         VALUES = f"""
         '{track.getOwnerDiscordID()}',
         '{track.getSteamID()}',
         '{track.getTime()}',
-        '{track.getChannelID()}'
+        '{track.getChannelID()}',
+        '{track.getIsBanned()}',
+        '{track.getBannedTime()}'
         """
         self.im.execute(f"INSERT INTO tracks ({KEY}) VALUES ({VALUES})")
         self.db.commit()
@@ -295,8 +299,8 @@ class Database():
         self.db.close()
         if result == None:
             return None
-        id, ownerDiscordID, steamID, time, channelID = result
-        myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
+        id, ownerDiscordID, steamID, time, channelID, isBanned, bannedTime = result
+        myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID, is_banned=isBanned, banned_time=bannedTime)
         return myTracker
     
     def deleteTrack(self,steamID:int, ownerDiscordID:int):
@@ -312,8 +316,8 @@ class Database():
         self.db.close()
         if result == None:
             return None
-        id, ownerDiscordID, steamID, time, channelID = result
-        myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
+        id, ownerDiscordID, steamID, time, channelID, isBanned , bannedTime = result
+        myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID, is_banned=isBanned, banned_time=bannedTime)
         return myTracker
     
     def getAllTrack(self) -> list[Track]:
@@ -325,8 +329,8 @@ class Database():
         if results == None:
             return None
         for result in results:
-            id ,ownerDiscordID, steamID, time, channelID = result
-            myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
+            id ,ownerDiscordID, steamID, time, channelID, isBanned , bannedTime= result
+            myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID, is_banned=isBanned, banned_time=bannedTime)
             trackList.append(myTracker)
         return trackList
     
@@ -339,8 +343,8 @@ class Database():
         if results == None:
             return None
         for result in results:
-            id ,ownerDiscordID, steamID, time, channelID = result
-            myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID)
+            id ,ownerDiscordID, steamID, time, channelID, isBanned, bannedTime = result
+            myTracker = Track(id, ownerDiscordID, steamID, time, channel_id=channelID, is_banned=isBanned, banned_time=bannedTime)
             trackList.append(myTracker)
         return trackList
     
@@ -415,4 +419,12 @@ class Database():
         for result in results:
             steamIDList.append(int(result[0]))
         return steamIDList
+    
+    def updateTrack(self, track:Track):
+        self.openDB()
+        self.im.execute(f"""UPDATE tracks SET
+                        isBanned={track.getIsBanned()},
+                        bannedTime={track.getBannedTime()},                
+                        WHERE ownerDiscordID={track.getOwnerDiscordID()} AND steamID={track.getSteamID()}
+                        """)
         

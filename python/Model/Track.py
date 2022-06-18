@@ -4,13 +4,17 @@ class Track:
                 ownerDiscordID : int = None,
                 steamID : int = None,
                 time : float = None,
-                channel_id : int = None
+                channel_id : int = None,
+                is_banned : bool = None,
+                banned_time : float = None
                 ) -> None:
         self.__id = id
         self.__ownerDiscordID = ownerDiscordID
         self.__steamID = steamID
         self.__time = time
         self.__channelID = channel_id
+        self.__is_banned= is_banned
+        self.__banned_time = banned_time
         
     def getID(self) -> int:
         return self.__id
@@ -22,6 +26,14 @@ class Track:
         return self.__time
     def getChannelID(self) -> int:
         return self.__channelID
+    def getIsBanned(self) -> bool:
+        if self.__is_banned == None:
+            return False
+        return self.__is_banned
+    def getBannedTime(self) -> float:
+        if self.__banned_time == None:
+            return 0
+        return self.__banned_time
     
     def setID(self, id : int) -> None:
         self.__id = id
@@ -33,6 +45,10 @@ class Track:
         self.__time = time
     def setChannelID(self, channel_id : int) -> None:
         self.__channelID = channel_id
+    def setIsBanned(self, is_banned : bool) -> None:
+        self.__is_banned = is_banned
+    def setBannedTime(self, banned_time : float) -> None:
+        self.__banned_time = banned_time
     
     def getURL(self) -> str:
         #https://steamcommunity.com/profiles/ID/
